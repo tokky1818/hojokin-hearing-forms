@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>持続化補助金＜創業型＞ヒアリング</title>
+<style>
+:root{
+  --bg:#f2f5f3;
+  --surface:#ffffff;
+  --surface-alt:#eaf1ee;
+  --text:#1a2624;
+  --text-muted:#5c6f6a;
+  --border:#d7e1dd;
+  --border-strong:#c1cfc9;
+  --accent:#1f6f5c;
+  --accent-strong:#154f42;
+  --accent-soft:#e1efe9;
+  --required:#96324a;
+  --required-soft:#f4e3e7;
+  --optional-text:#5c6f6a;
+  --optional-soft:#eef2f0;
+  --success:#1f6f5c;
+  --danger:#a23b3b;
+  --shadow:0 1px 2px rgba(20,40,35,.06),0 8px 24px -12px rgba(20,40,35,.18);
+  --radius:12px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1614;
+    --surface:#161f1c;
+    --surface-alt:#1b2521;
+    --text:#e6ece9;
+    --text-muted:#9db0ab;
+    --border:#2b3733;
+    --border-strong:#3a4844;
+    --accent:#4fae93;
+    --accent-strong:#6fcaad;
+    --accent-soft:#1c332c;
+    --required:#e08fa2;
+    --required-soft:#3a2229;
+    --optional-text:#9db0ab;
+    --optional-soft:#1f2925;
+    --success:#63c79a;
+    --danger:#d98a8a;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1614;
+  --surface:#161f1c;
+  --surface-alt:#1b2521;
+  --text:#e6ece9;
+  --text-muted:#9db0ab;
+  --border:#2b3733;
+  --border-strong:#3a4844;
+  --accent:#4fae93;
+  --accent-strong:#6fcaad;
+  --accent-soft:#1c332c;
+  --required:#e08fa2;
+  --required-soft:#3a2229;
+  --optional-text:#9db0ab;
+  --optional-soft:#1f2925;
+  --success:#63c79a;
+  --danger:#d98a8a;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
+  color-scheme: dark;
+}
+*{box-sizing:border-box;}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:"Noto Sans JP","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  -webkit-text-size-adjust:100%;
+}
+h1,h2,h3,.serif{font-family:"Shippori Mincho",serif;}
+h1,h2,h3{text-wrap:balance;}
+button{font-family:inherit;}
+input,textarea,select{font-family:inherit;font-size:15px;color:var(--text);}
+.app-shell{display:flex;min-height:100vh;}
+.rail{
+  width:248px;flex:none;background:var(--surface);border-right:1px solid var(--border);
+  padding:28px 18px;position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.rail-brand{font-family:"Shippori Mincho",serif;font-size:15px;line-height:1.5;color:var(--accent-strong);margin:0 0 22px;padding:0 6px;}
+.rail-brand small{display:block;font-family:"Noto Sans JP",sans-serif;font-size:11px;color:var(--text-muted);margin-top:3px;font-weight:500;}
+.rail-step{
+  display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;
+  color:var(--text-muted);font-size:13.5px;margin-bottom:2px;transition:background .15s;
+}
+.rail-step:hover{background:var(--surface-alt);}
+.rail-step.active{background:var(--accent-soft);color:var(--accent-strong);font-weight:600;}
+.rail-dot{
+  width:22px;height:22px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;
+  font-size:10.5px;font-weight:700;border:1.5px solid var(--border-strong);color:var(--text-muted);background:var(--surface);
+  font-variant-numeric:tabular-nums;
+}
+.rail-step.active .rail-dot{border-color:var(--accent);color:var(--accent-strong);}
+.rail-step.done .rail-dot{background:var(--accent);border-color:var(--accent);color:#fff;}
+.rail-step.done .rail-dot::after{content:"✓";}
+.rail-step.done .rail-dot{font-size:0;}
+.rail-step.done .rail-dot::after{font-size:12px;}
+.rail-label-wrap{min-width:0;}
+.rail-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rail-sub{font-size:10.5px;color:var(--text-muted);opacity:.8;font-variant-numeric:tabular-nums;}
+
+.mobile-tracker{display:none;}
+.main-col{flex:1;min-width:0;display:flex;flex-direction:column;}
+.main-scroll{flex:1;padding:32px 24px 140px;max-width:760px;width:100%;margin:0 auto;}
+.block-header{margin-bottom:26px;}
+.block-eyebrow{font-size:12px;letter-spacing:.06em;color:var(--accent-strong);font-weight:600;margin:0 0 6px;}
+.block-title{font-size:23px;margin:0 0 6px;color:var(--text);}
+.block-subtitle{font-size:14px;color:var(--text-muted);margin:0;}
+.block-note{
+  margin-top:14px;background:var(--surface-alt);border:1px solid var(--border);border-radius:10px;
+  padding:11px 14px;font-size:12.5px;color:var(--text-muted);line-height:1.7;
+}
+.group-heading{
+  font-size:14.5px;font-weight:700;color:var(--accent-strong);margin:34px 0 12px;padding-bottom:8px;
+  border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:8px;
+}
+.group-heading:first-of-type{margin-top:0;}
+.group-note{font-size:12px;color:var(--text-muted);margin:-6px 0 14px;line-height:1.7;}
+.inline-note{
+  font-size:12px;color:var(--text-muted);background:var(--surface-alt);border:1px solid var(--border);
+  border-radius:10px;padding:10px 14px;margin:-4px 0 14px;line-height:1.75;
+}
+
+.qcard{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:18px 18px 20px;margin-bottom:14px;box-shadow:var(--shadow);
+}
+.qcard.answered{border-color:var(--border-strong);}
+.q-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.q-no{font-size:11.5px;font-weight:700;color:var(--text-muted);font-variant-numeric:tabular-nums;}
+.badge{font-size:10.5px;font-weight:700;padding:2.5px 8px;border-radius:99px;letter-spacing:.02em;}
+.badge.req{background:var(--required-soft);color:var(--required);}
+.badge.opt{background:var(--optional-soft);color:var(--optional-text);}
+.q-label{font-size:15.5px;font-weight:600;margin:2px 0 5px;line-height:1.5;}
+.q-prompt{font-size:13px;color:var(--text-muted);line-height:1.7;margin:0 0 10px;}
+.q-example{
+  font-size:12px;color:var(--text-muted);background:var(--surface-alt);border-radius:8px;
+  padding:7px 10px;margin-bottom:10px;line-height:1.6;
+}
+.q-example b{color:var(--accent-strong);font-weight:700;}
+.q-input, select.q-input{
+  width:100%;border:1.5px solid var(--border-strong);border-radius:9px;padding:10px 12px;
+  background:var(--surface);color:var(--text);transition:border-color .15s,box-shadow .15s;
+}
+textarea.q-input{min-height:80px;resize:vertical;line-height:1.6;}
+.q-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
+select.q-input{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--text-muted) 50%),linear-gradient(135deg,var(--text-muted) 50%,transparent 50%);background-position:calc(100% - 20px) center,calc(100% - 15px) center;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:34px;}
+
+.invitem{border:1.5px dashed var(--border-strong);border-radius:var(--radius);padding:16px 16px 4px;margin-bottom:16px;background:var(--surface-alt);}
+.invitem-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.invitem-title{font-weight:700;font-size:14.5px;color:var(--accent-strong);}
+.invitem .qcard{background:var(--surface);}
+.btn-remove{font-size:12px;color:var(--danger);background:none;border:none;cursor:pointer;padding:4px 6px;}
+.btn-add{
+  display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px;
+  border:1.5px dashed var(--border-strong);border-radius:var(--radius);background:none;color:var(--accent-strong);
+  font-weight:600;font-size:13.5px;cursor:pointer;margin-bottom:16px;
+}
+.btn-add:hover{background:var(--accent-soft);}
+
+.doc-row{
+  display:flex;gap:12px;align-items:flex-start;border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;margin-bottom:8px;background:var(--surface);flex-wrap:wrap;
+}
+.doc-main{flex:1;min-width:200px;}
+.doc-label{font-size:13.5px;line-height:1.6;margin-bottom:8px;}
+.doc-state{display:flex;gap:6px;}
+.doc-chip{
+  font-size:11.5px;padding:5px 10px;border-radius:99px;border:1.5px solid var(--border-strong);
+  background:var(--surface);color:var(--text-muted);cursor:pointer;font-weight:600;white-space:nowrap;
+}
+.doc-chip.on-ready{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-strong);}
+.doc-chip.on-none{background:var(--optional-soft);border-color:var(--border-strong);color:var(--text-muted);}
+.doc-note{margin-top:8px;}
+.doc-note input{width:100%;font-size:12.5px;padding:7px 9px;border:1px solid var(--border);border-radius:7px;background:var(--surface);color:var(--text);}
+.doc-sub-heading{font-size:12.5px;font-weight:700;color:var(--text-muted);margin:16px 0 8px;padding-left:2px;}
+
+.footer-bar{
+  position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--border);
+  padding:12px 24px calc(12px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:14px;
+  box-shadow:0 -6px 18px -12px rgba(0,0,0,.15);
+}
+.footer-progress{flex:1;min-width:0;}
+.footer-progress-text{font-size:11.5px;color:var(--text-muted);margin-bottom:5px;font-variant-numeric:tabular-nums;display:flex;justify-content:space-between;}
+.footer-bar-track{height:6px;border-radius:99px;background:var(--optional-soft);overflow:hidden;}
+.footer-bar-fill{height:100%;background:var(--accent);border-radius:99px;transition:width .25s;}
+.btn{
+  font-size:13.5px;font-weight:700;padding:10px 18px;border-radius:9px;border:1.5px solid var(--border-strong);
+  background:var(--surface);color:var(--text);cursor:pointer;white-space:nowrap;
+}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+.btn.primary:hover{background:var(--accent-strong);}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn.ghost{border-color:transparent;color:var(--text-muted);}
+
+.cover-wrap{max-width:640px;margin:0 auto;padding:44px 22px 60px;}
+.cover-title{font-size:26px;line-height:1.5;margin:0 0 8px;}
+.cover-sub{font-size:13px;color:var(--text-muted);margin:0 0 28px;}
+.cover-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px 20px 22px;box-shadow:var(--shadow);margin-bottom:18px;}
+.cover-card h3{font-size:14.5px;margin:0 0 10px;color:var(--accent-strong);}
+.cover-card p{font-size:13px;line-height:1.85;color:var(--text-muted);margin:0 0 8px;}
+.usage-grid{display:grid;gap:9px;}
+.usage-item{display:flex;gap:10px;font-size:12.5px;line-height:1.7;color:var(--text-muted);}
+.usage-item b{color:var(--text);flex:none;min-width:70px;font-weight:700;}
+.field-row{margin-bottom:14px;}
+.field-row label{display:block;font-size:12.5px;font-weight:700;margin-bottom:5px;color:var(--text);}
+.resume-note{
+  font-size:12px;background:var(--accent-soft);color:var(--accent-strong);border-radius:9px;padding:9px 12px;
+  margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+}
+.resume-note button{font-size:11.5px;background:none;border:none;color:var(--danger);cursor:pointer;text-decoration:underline;padding:0;}
+.start-btn{width:100%;padding:14px;font-size:15px;margin-top:6px;border-radius:10px;}
+
+.review-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;}
+.stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
+.stat-num{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-strong);}
+.stat-label{font-size:11.5px;color:var(--text-muted);margin-top:2px;}
+.missing-box{background:var(--required-soft);border:1px solid var(--required);border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;}
+.missing-box h4{margin:0 0 8px;font-size:13px;color:var(--required);}
+.missing-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;}
+.missing-list li a{font-size:12.5px;color:var(--required);text-decoration:none;cursor:pointer;}
+.missing-list li a:hover{text-decoration:underline;}
+.save-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px;}
+.save-section h3{font-size:14.5px;margin:0 0 4px;}
+.save-section p.hint{font-size:12px;color:var(--text-muted);margin:0 0 14px;}
+.save-btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;}
+.save-btn-row .btn{flex:1;min-width:150px;}
+.copy-area{width:100%;min-height:120px;font-size:11.5px;font-family:ui-monospace,monospace;padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--surface-alt);color:var(--text-muted);}
+.toast{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--text);color:var(--bg);
+  padding:9px 18px;border-radius:99px;font-size:12.5px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:50;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.reset-link{font-size:11.5px;color:var(--text-muted);text-align:center;margin-top:8px;}
+.reset-link a{color:var(--text-muted);cursor:pointer;}
+
+@media (max-width:880px){
+  .rail{display:none;}
+  .mobile-tracker{
+    display:flex;gap:6px;overflow-x:auto;padding:12px 14px;background:var(--surface);
+    border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10;-webkit-overflow-scrolling:touch;
+  }
+  .mt-pill{
+    flex:none;display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:99px;
+    border:1.5px solid var(--border-strong);font-size:11.5px;color:var(--text-muted);white-space:nowrap;cursor:pointer;
+  }
+  .mt-pill.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-strong);font-weight:700;}
+  .mt-pill.done{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .main-scroll{padding:20px 16px 130px;}
+  .footer-bar{padding:10px 14px calc(10px + env(safe-area-inset-bottom));}
+  .btn{padding:10px 14px;}
+  .review-stats{grid-template-columns:1fr 1fr;}
+}
+</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap">
+</head>
+<body>
+
+<div class="app-shell">
+  <nav class="rail" id="rail"></nav>
+  <div class="main-col">
+    <div class="mobile-tracker" id="mobileTracker"></div>
+    <div class="main-scroll" id="mainScroll"></div>
+    <div class="footer-bar" id="footerBar"></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- data ---------------- */
+const OPT = {
+  entity: ["法人","個人事業主","これから設立・開業する予定"],
+  corp: ["株式会社","合同会社","合資会社","合名会社","一般社団法人","一般財団法人","NPO法人","その他"],
+  bizStatus: ["既に開業して営業中","開業準備中（これから開業）"],
+  certStatus: ["取得済み","申請中","これから申請する","まだ支援を受けていない"],
+  invoiceIntent: ["はい（登録する予定）","すでに登録済み","いいえ","わからない"],
+  propertyStatus: ["契約済み","契約予定","自宅兼事務所","物件を探している"],
+  efficiencyYN: ["ある","ない"],
+  salesPattern: ["①新商品・新サービスの販売","②客数の増加","③客単価の向上","④これらを組み合わせた形"],
+  quoteStatus: ["取得済み（相見積もりあり）","取得済み（1社のみ）","依頼中","これから取得する"],
+  bankConsult: ["相談済み","申込予定","未着手","借入の予定なし"]
+};
+
+function Q(id, required, label, prompt, example, type, extra){
+  return Object.assign({id, required, label, prompt, example: example||"", type: type||"textarea"}, extra||{});
+}
+function Note(text){ return {type:"note", text}; }
+
+const RESPONDENT_FIELDS = [
+  Q("R_BIZNAME", true, "事業者名（屋号・法人名）", "", "", "text"),
+  Q("R_NAME", true, "ご記入者のお名前", "", "", "text"),
+  Q("R_CONTACT", true, "ご連絡先（電話／メール）", "", "", "text"),
+  Q("R_DATE", true, "ご記入日", "", "", "date")
+];
+
+const BLOCKS = [
+  { id:"b0", eyebrow:"Q0ブロック", title:"前提確認", subtitle:"創業型の申請要件・投資の概要",
+    note:"創業型には、一般型にはない「開業時期」「特定創業支援等事業の支援」という固有の要件があります。このブロックで申請可能かどうかを最初に確認します。",
+    groups:[ { questions:[
+      Q("Q0-1", true, "事業形態", "事業形態を教えてください。", "法人（合同会社）／個人事業主／これから開業予定", "select", {options:OPT.entity}),
+      Q("Q0-2", true, "法人の形態", "法人の種類を教えてください。", "株式会社／合同会社／一般社団法人　など", "select", {options:OPT.corp, dependsOn:{id:"Q0-1", in:["法人"]}}),
+      Q("Q0-3", true, "開業日・法人設立日", "個人事業主の方は開業届の提出日（開業日）、法人の方は設立年月日を教えてください。まだ開業されていない場合は、開業予定日を教えてください。", "2026年5月1日に開業届を提出／2026年11月に開業予定", "text"),
+      Note("※創業型は「開業日（法人設立日）が公募締切時から起算して過去1か年以内であること」が要件です。公募回によって要件が変更される場合があるため、申請時は必ず最新の公募要領でご確認ください。"),
+      Q("Q0-4", true, "開業の状況", "現在の状況に近いものを教えてください。", "既に開業して営業中（開業から5か月）", "select", {options:OPT.bizStatus}),
+      Q("Q0-5", true, "特定創業支援等事業の支援", "認定市区町村または認定連携創業支援等事業者による「特定創業支援等事業」（創業セミナー・窓口相談等）の支援を受けましたか？受けた場合は、その時期と支援機関名も教えてください。", "2026年6月に〇〇市の創業スクール（全4回）を受講", "textarea"),
+      Note("※創業型の必須要件です。「1か月以上かつ4回以上」の支援を受け、支援を受けた日も公募締切から過去1か年以内である必要があります。まだ受けていない場合は、お住まいの市区町村の窓口にお早めにご相談ください。"),
+      Q("Q0-6", true, "特定創業支援等事業の証明書", "市区町村が発行する「特定創業支援等事業による支援を受けたことの証明書」の取得状況を教えてください。", "取得済み（2026年7月交付）", "select", {options:OPT.certStatus}),
+      Note("※証明書の交付には時間がかかる場合があります。申請に間に合うよう、早めの手続きをおすすめします。"),
+      Q("Q0-7", true, "常時使用する従業員数", "代表者・役員を除き、常時雇用している（雇用予定の）従業員は何名ですか？（正社員・パート・アルバイト等、雇用形態を問いません）", "2名（接客スタッフ、シフト制）", "text"),
+      Note("※小規模事業者の従業員数の基準は業種により異なります（例：商業・サービス業は5人以下、宿泊業・娯楽業を含むサービス業や製造業その他は20人以下 等）。"),
+      Q("Q0-8", true, "今回の投資内容の概要（複数可）", "今回、補助金を使って投資しようとしている内容を教えてください（例：店舗の内装工事、設備・機械、ウェブサイト制作、チラシ・広告制作など）。複数ある場合はすべて挙げてください。", "①店舗の内装工事　②トレーニングマシンの導入　③看板の設置", "textarea"),
+      Q("Q0-9", true, "投資予定総額と補助金申請予定額", "投資予定の総額（補助対象経費）と、申請を予定している補助金額を教えてください。", "補助対象経費418万円／補助金申請額200万円（補助率2/3、上限200万円）", "text"),
+      Note("※創業型の補助上限は200万円、補助率は2/3です（インボイス特例の適用で最大250万円）。"),
+      Q("Q0-10", false, "インボイス特例の利用希望", "免税事業者から適格請求書発行事業者（インボイス）への登録を予定していますか？", "すでに登録済み", "select", {options:OPT.invoiceIntent}),
+      Note("※要件を満たす場合、補助上限が200万円から250万円に引き上げられます。なお、賃金引上げ特例は創業型では適用されません。"),
+      Q("Q0-11", false, "加点項目に該当しそうな取り組み", "経営力向上計画の認定、事業継続力強化計画、過疎地域での事業実施、事業承継、くるみん・えるぼし認定など、加点対象となりそうな取り組みや認定はありますか？（特になければ「なし」）", "過疎地域に該当する市町村で開業予定", "textarea")
+    ]}]
+  },
+  { id:"b1", eyebrow:"第1ブロック", title:"企業概要", subtitle:"創業の経緯／代表者／事業内容／資金／課題",
+    note:"創業型では、この「企業概要」の中で、創業の経緯・代表者の経歴・事業内容・事業体制・資金の状況までを説明します。特に代表者のご経歴は、計画の実現可能性を裏付ける最重要の材料になります。",
+    groups:[
+      { heading:"1. 創業の経緯と代表者のプロフィール", questions:[
+        Q("Q1-1", true, "創業のきっかけ・動機", "なぜこの事業で創業しようと思ったのですか？きっかけとなった出来事や、事業を通じて実現したい思いを教えてください。", "生まれ育った地域の酪農業界が厳しい経営環境にあることを知り、前職で培ったプロモーションの力で地域の課題を解決したいと考えたため。", "textarea"),
+        Q("Q1-2", true, "代表者の職務経歴", "これまでどのような仕事に、何年間携わってこられましたか？直近の勤務先・役職も含めて教えてください。", "〇〇市のプロモーション会社でプランナーとして22年間従事／〇年間〇〇競技の選手として活動し、引退後はスポーツクラブでコーチを務めた。", "textarea"),
+        Q("Q1-3", true, "経歴と今回の事業とのつながり", "これまでのご経験は、今回の事業にどのように活かせますか？", "選手・指導者としての経験と理学療法士の知見を活かし、科学的根拠に基づいた指導ができる。", "textarea"),
+        Q("Q1-4", false, "保有資格・専門知識", "事業に関係する資格、免許、専門的な技術・知識があれば教えてください（特になければ「なし」）。", "理学療法士免許、〇〇認定トレーナー資格", "textarea"),
+        Q("Q1-5", false, "これまでの実績・受賞歴・取引実績", "受賞歴、メディア掲載、大手企業との取引実績、修業先など、実力を裏付ける実績があれば教えてください（特になければ「なし」）。", "全国4社のコンペ形式による選考で〇〇のプロモーション業務を受注／京都の老舗料亭で10年の修業経験", "textarea")
+      ]},
+      { heading:"2. 事業所・店舗の概要", questions:[
+        Q("Q2-1", true, "屋号・事業所名", "お店・会社の名称（屋号）を教えてください。", "〇〇アスリートジム／合同会社〇〇", "text"),
+        Q("Q2-2", true, "所在地と立地の特徴", "事業所・店舗の所在地と、立地の特徴（最寄り駅からの距離、周辺環境、人通りなど）を教えてください。", "〇〇県〇〇市、JR〇〇駅から徒歩5分。3路線が乗り入れており乗換客も多い。", "textarea"),
+        Q("Q2-3", true, "物件の確保状況", "店舗・事業所の物件は確保されていますか？契約予定の場合は時期も教えてください。", "スケルトン物件を〇月に賃貸借契約の予定", "select", {options:OPT.propertyStatus}),
+        Q("Q2-4", true, "営業時間・定休日", "営業時間と定休日を教えてください（BtoBの場合は稼働時間帯）。", "10:00〜22:00／定休日：水曜日", "text"),
+        Q("Q2-5", false, "店舗・設備の規模", "客席数、床面積、保有設備、作業スペースなど、事業規模がわかる数値を教えてください。", "4名テーブル1席・6名テーブル2席の計16席、4〜6名用の個室3室", "text"),
+        Q("Q2-6", true, "社内の運営体制", "現在（または開業時）の運営体制は何名ですか？役割分担や増員の予定も含めて教えてください。", "オープン当初は代表1名で運営し、半年後を目途にトレーナーを1名増員予定。", "textarea"),
+        Q("Q2-7", false, "社外の協力体制", "外注先、協力会社、業務提携先など、社外の協力体制があれば教えてください（特になければ「なし」）。", "協力会社2社（サイト制作等の一部業務を外注）", "textarea")
+      ]},
+      { heading:"3. 商品・サービスの内容", questions:[
+        Q("Q3-1", true, "主な商品・サービス", "提供する（提供予定の）主な商品・サービスを教えてください。複数ある場合はすべて挙げてください。", "①コーヒー豆の販売　②コーヒーバッグ　③贈答用セット商品", "textarea"),
+        Q("Q3-2", true, "価格帯・料金体系", "それぞれの商品・サービスの価格（料金体系）を教えてください。", "コーヒー豆700円〜/100g、贈答用セット3,000〜10,000円／入会金30,000円＋月額32,000円〜56,000円", "textarea"),
+        Q("Q3-3", true, "ターゲット顧客", "どのようなお客様に利用してほしいですか？年代・属性・ニーズなど、できるだけ具体的に教えてください。", "JR〇〇駅を利用する、競技力の向上を目指すアスリートやアスリート志望の方", "textarea"),
+        Q("Q3-4", true, "商品・サービスの特徴・こだわり", "他店にはない特徴、こだわっている点、力を入れている点は何ですか？", "完全予約制の個別指導。運動指導だけでなく、食事メニューの提案や生活習慣の改善アドバイスも実施する。", "textarea"),
+        Q("Q3-5", true, "提供方法・販売チャネル", "どのような方法で商品・サービスを提供しますか？（店舗販売／オンライン販売／BtoB卸売／出張・訪問など。複数ある場合は割合も）", "店舗販売75％、オンライン販売25％", "textarea")
+      ]},
+      { heading:"4. 売上・業績の状況", questions:[
+        Note("※このセクションは、既に開業されている方（Q4-1〜Q4-5）と、これから開業される方（Q4-6〜Q4-7）で回答いただく設問が分かれます。"),
+        Q("Q4-1", true, "開業後の月次売上推移【開業済みの方】", "開業後、各月の売上高・売上総利益（粗利）・客数を、分かる範囲で教えてください。", "1か月目81万円／2か月目63万円／3か月目97万円／4か月目105万円／5か月目125万円（客数76→54→91→98→110人）", "textarea", {dependsOn:{id:"Q0-4", in:["既に開業して営業中"]}}),
+        Q("Q4-2", true, "売上の増減要因【開業済みの方】", "売上が伸びた（または落ちた）要因は何だとお考えですか？", "オープン直後は目新しさから好調だったが2か月目に落ち着いた。3か月目以降は広告宣伝の強化と丁寧な接客の徹底により月商100万円前後で安定。", "textarea", {dependsOn:{id:"Q0-4", in:["既に開業して営業中"]}}),
+        Q("Q4-3", false, "商品・サービス別の売上シェア【開業済みの方】", "商品・サービス別、または販売チャネル別の売上シェアが分かれば教えてください。", "店舗販売75％・オンライン販売25％／売上1位コーヒー豆168万円、2位コーヒーバッグ142万円", "textarea", {dependsOn:{id:"Q0-4", in:["既に開業して営業中"]}}),
+        Q("Q4-4", true, "客単価と客数の実績【開業済みの方】", "現在の客単価と、月間（または1日あたり）の客数を教えてください。", "客単価約10,000円、月間客数110人（1日あたり平均〇名）", "text", {dependsOn:{id:"Q0-4", in:["既に開業して営業中"]}}),
+        Q("Q4-5", false, "利用シーン・利用目的の内訳【開業済みの方】", "お客様はどのような場面・目的で利用されていますか？割合が分かれば併せて教えてください。", "売上の8割が接待や会食、残りは仲間内や習い事、家族との食事会", "textarea", {dependsOn:{id:"Q0-4", in:["既に開業して営業中"]}}),
+        Q("Q4-6", true, "開業後の売上見込みとその根拠【これから開業の方】", "開業後、どのくらいの売上を見込んでいますか？その根拠（想定客数×客単価など）も併せて教えてください。", "会員20名×月額32,000円＝月商64万円。近隣ジムの会員数と地域の競技人口から算定。", "textarea", {dependsOn:{id:"Q0-4", in:["開業準備中（これから開業）"]}}),
+        Q("Q4-7", false, "開業に向けてこれまでに行った準備【これから開業の方】", "市場調査、試作、テスト販売、見込み客の獲得、SNSでの発信など、これまでに行った準備があれば教えてください。", "SNSで開業準備の様子を発信し、フォロワー〇名を獲得。開業前の予約を〇件確保。", "textarea", {dependsOn:{id:"Q0-4", in:["開業準備中（これから開業）"]}})
+      ]},
+      { heading:"5. 開業資金と資金繰りの状況", note:"創業型では、様式3「Ⅲ．資金調達方法」の記載に、開業資金と補助金入金までのつなぎ資金の情報が必要になります。", questions:[
+        Q("Q5-1", true, "開業資金の総額と内訳", "開業にあたって必要な（必要だった）資金の総額と、その内訳を教えてください。", "総額500万円（内装工事200万円、設備150万円、運転資金150万円）", "textarea"),
+        Q("Q5-2", true, "開業資金の調達方法", "開業資金をどのように調達されましたか（される予定ですか）？", "自己資金300万円、日本政策金融公庫からの借入200万円／全額自己資金で借入の予定はない", "textarea"),
+        Q("Q5-3", true, "借入金の状況と返済", "現在の借入残高と毎月の返済額を教えてください（借入がない場合は「なし」）。", "借入残高200万円、毎月〇万円を返済中", "text"),
+        Q("Q5-4", true, "補助金入金までのつなぎ資金", "補助金は補助事業終了後の精算払いです。業者への支払いから補助金の入金までの間の資金は、どのように手当てされますか？", "自己資金で手当てする／〇〇銀行からの借入で対応する予定", "textarea"),
+        Note("※様式3「Ⅲ．資金調達方法」の「補助金相当額の手当方法」に記載する必要があります。")
+      ]},
+      { heading:"6. 現在の経営課題", note:"ここで挙げていただく課題が、補助金で投資を行う理由（根拠）になります。", questions:[
+        Q("Q6-1", true, "経営課題①（売上・集客面）", "新規のお客様の獲得や売上の確保に関して、現在いちばん困っていることは何ですか？", "創業間もなく認知度が低いため、新規顧客の獲得が難しく売上が伸び悩んでいる。", "textarea"),
+        Q("Q6-2", true, "経営課題②（人員・体制面）", "人手、シフト、ノウハウなど、事業運営の体制面で足かせになっていることは何ですか？", "スタッフ2名のシフト制のため、急な欠勤が発生するとシフトが回らなくなるリスクがある。", "textarea"),
+        Q("Q6-3", true, "経営課題③（設備・資産・資金面）", "設備、店舗、システムなど、事業に必要だがまだ揃っていないものは何ですか？", "サービス提供に必要な事業用資産を保有しておらず、早急な調達が必要である。", "textarea"),
+        Q("Q6-4", false, "その他の経営課題", "上記以外に直面している経営課題があれば教えてください（特になければ「なし」）。", "原価率が高く、最終的な利益率が読みにくい構造になっている。", "textarea")
+      ]}
+    ]
+  },
+  { id:"b2", eyebrow:"第2ブロック", title:"顧客ニーズ・市場の動向・強み・弱み", subtitle:"顧客ニーズ／市場動向／競合／強み・弱み", note:"",
+    groups:[
+      { heading:"7. 顧客ニーズ", questions:[
+        Q("Q7-1", true, "メインの客層（実績または想定）", "実際に利用されている（想定している）中心的な客層を教えてください。", "40〜50代の近隣主婦層／近隣工場の従業員／30代ファミリー層", "text"),
+        Q("Q7-2", true, "お客様が求めている価値", "お客様は、どのような価値や困りごとの解決を求めて、あなたの商品・サービスを選ぶとお考えですか？", "単なるダイエットではなく、競技力の向上や身体機能の改善という明確な成果を求めている。", "textarea"),
+        Q("Q7-3", false, "お客様から実際にいただいた声【開業済みの方】", "お客様から寄せられた具体的な感想・評価の言葉があれば教えてください（良い評価・悪い評価どちらも）。", "「香りと味が他店と全く違う」／「購入完了まで手続きが多く時間がかかった」（50代男性）", "textarea", {dependsOn:{id:"Q0-4", in:["既に開業して営業中"]}}),
+        Q("Q7-4", false, "お客様からの要望・リクエスト", "「こういう商品・サービスはないの？」といった要望を受けたことがあれば教えてください（特になければ「なし」）。", "「自宅でも食べられるように持ち帰り用の商品を作ってほしい」", "textarea"),
+        Q("Q7-5", false, "顧客の居住エリアの分布", "お客様がどのエリアからお越しか、分かる範囲で教えてください（会員データ・アンケート等があれば）。", "会員の8割がA市、B市が6％、C町が4％。オンライン販売は8割が県外からの注文。", "textarea")
+      ]},
+      { heading:"8. 市場の動向", note:"業界の市場規模や地域経済の定量データは、こちらでAIによる調査を行い補完します。ここでは、事業者様が現場で感じている実感をお聞かせください。", questions:[
+        Q("Q8-1", true, "業界の動向（肌感覚）", "同業者や業界全体を見ていて、最近増えている動きや変化を教えてください。", "テイクアウト・デリバリー需要の定着、健康志向の高まり、AIを活用した効率的なサービスの登場", "textarea"),
+        Q("Q8-2", true, "商圏エリアの状況", "お店・事業所の周辺エリアで起きている変化（人の流れ、開発、人口動態など）を教えてください。", "駅周辺で再開発が進み、新しい商業施設やマンションが建設されている。質の高いものを求める層の流入が続いている。", "textarea"),
+        Q("Q8-3", false, "参考にしている業界データ・情報源", "業界紙、調査レポート、統計データなど、参考にされている情報があれば教えてください（特になければ「なし」）。", "〇〇調査会社の業界動向調査、〇〇協会の統計データ", "textarea")
+      ]},
+      { heading:"9. 競合の状況", questions:[
+        Q("Q9-1", true, "競合の有無と数", "商圏内に、似た商品・サービスを提供する同業他社はどのくらいありますか？", "駅から徒歩5分圏内に同業のパーソナルジムが約8件、今後オープン予定が3件", "textarea"),
+        Q("Q9-2", true, "主要な競合の詳細（比較表用）", "特に意識している競合を2〜3社挙げ、それぞれについて「客層／利用目的／立地／セールスポイント／価格帯」を教えてください。計画書では比較表を作成します。", "A店：アスリート向け／駅前／1対複数の少人数制でリーズナブル／月2〜3万円　B店：筋トレ上級者向け／徒歩3分／有名トレーナー在籍／月2〜4万円", "textarea"),
+        Q("Q9-3", true, "競合と比べた自社の違い・優位性", "その競合と比べて、自社はお客様に対してどのような違い（強み）を出していますか？", "A店はセミパーソナルによる低価格が強みだが、当店は完全マンツーマンの個別指導に特化しており、この点が最大の差別化ポイント。", "textarea"),
+        Q("Q9-4", false, "棲み分けができている同業者", "同業ではあるが客層や目的が異なり、競合には当たらないと考えている事業者があれば教えてください（特になければ「なし」）。", "B店・C店はダイエット目的の客層が中心で、当店とは客層が異なるため競合には当たらない。", "textarea")
+      ]},
+      { heading:"10. 強み・弱み・機会・脅威", questions:[
+        Q("Q10-1", true, "強み①（最も自信のある点）", "他店・他社と比べて「これだけは負けない」と誇れる点は何ですか？", "選手・指導者としての経験と理学療法士の知見を併せ持ち、科学的根拠に基づく指導ができる。", "textarea"),
+        Q("Q10-2", true, "強み②", "2つ目の強みを教えてください。", "複数路線が乗り入れる駅から徒歩5分という立地の良さ。仕事帰りや隙間時間にも利用しやすい。", "textarea"),
+        Q("Q10-3", false, "強み③", "3つ目の強みがあれば教えてください（特になければ「なし」）。", "ウェア・タオル・アメニティを無料貸し出しし、手ぶらで通える環境を提供している。", "textarea"),
+        Q("Q10-4", true, "弱み①（最大のボトルネック）", "「ここが自社の弱点だ」と感じている点は何ですか？", "創業間もないため認知度が低く、新規顧客の獲得に時間がかかる。", "textarea"),
+        Q("Q10-5", false, "弱み②", "2つ目の弱みがあれば教えてください（特になければ「なし」）。", "個別指導のため時間枠に限りがあり、受け入れ人数に制限がある。", "textarea"),
+        Q("Q10-6", false, "事業機会（追い風）", "自社にとって追い風になりそうな外部の変化があれば教えてください。", "健康志向の高まりと、駅周辺の再開発による人口流入。", "textarea"),
+        Q("Q10-7", false, "脅威（逆風）", "自社にとって逆風・リスクになりそうな外部の変化があれば教えてください。", "大手チェーンの地域進出、原材料価格の高騰。", "textarea")
+      ]}
+    ]
+  },
+  { id:"b3", eyebrow:"第3ブロック", title:"経営方針・目標と今後のプラン", subtitle:"経営方針／年次プラン／数値目標", note:"",
+    groups:[
+      { heading:"11. 経営方針・目指す姿", questions:[
+        Q("Q11-1", true, "経営方針・ビジョン", "今後、どのような会社（お店）でありたいですか？事業を通じて実現したいことを教えてください。", "科学的根拠に基づいた専門的指導と、効率的に成果を実感できるプログラムを提供し、一般的なジムとは一線を画す店舗運営を行う。", "textarea"),
+        Q("Q11-2", true, "3年後に実現したい状態", "3年後、事業をどのような状態にしていたいですか？", "地域で〇〇といえば当店と言われる認知を獲得し、2店舗目の出店を具体的に検討できる状態。", "textarea"),
+        Q("Q11-3", false, "地域への貢献", "事業が軌道に乗ることで、地域にどのような良い影響を与えられますか？（特になければ「なし」）", "地元農家からの仕入れ拡大による地産地消への貢献と、地元での新規雇用の創出。", "textarea")
+      ]},
+      { heading:"12. 年次アクションプラン", note:"創業型では「時期と具体的な行動」を年次で示すことが求められます。", questions:[
+        Q("Q12-1", true, "1年目に取り組むこと", "開業〜1年目に取り組む具体的な行動を、時期とあわせて教えてください。", "賃貸借契約後に内装工事と設備設置を実施。プレオープンおよびグランドオープンイベントを開催し、広告・販促に注力する。", "textarea"),
+        Q("Q12-2", true, "2年目に取り組むこと", "2年目に取り組む具体的な行動を教えてください。", "引き続き新規顧客の獲得を進めるとともに、スタッフ教育により顧客の離脱防止とサービスレベルの向上を図る。", "textarea"),
+        Q("Q12-3", true, "3年目に取り組むこと", "3年目に取り組む具体的な行動を教えてください。", "AIやアプリを導入して特色あるプログラムを提供し差別化を図る。あわせて2店舗目の出店に向けた検討を開始する。", "textarea"),
+        Q("Q12-4", false, "中長期的な展望", "3年より先に構想している展開があれば教えてください（特になければ「なし」）。", "物販事業への進出。自慢の料理を冷凍惣菜としてパッケージ化し、店頭およびオンラインショップで販売する。", "textarea")
+      ]},
+      { heading:"13. 経営目標（数値目標）", note:"具体的な数値表は、第5ブロック「18．定量的な効果の算出パラメータ」でお伺いする内容をもとに、こちらで作成します。ここでは前提となる考え方をお聞かせください。", questions:[
+        Q("Q13-1", true, "3年間の売上目標", "1年目・2年目・3年目の売上高について、目標や見込みがあれば教えてください（大まかで構いません）。", "1年目1,320万円、2年目2,160万円、3年目3,500万円", "textarea"),
+        Q("Q13-2", true, "毎月かかる主な固定費", "家賃、人件費、宣伝広告費、リース料など、毎月固定的にかかる費用を教えてください。", "家賃45万円/月、人件費〇万円/月、宣伝広告費10万円/月", "textarea"),
+        Q("Q13-3", true, "原価率の想定", "売上に対する原価（仕入・材料費）の割合は、どのくらいを想定していますか？", "約38％（食材原価）／業界平均を援用して30％と想定", "text"),
+        Q("Q13-4", false, "目標とする顧客数・会員数", "3年間で目指す顧客数・会員数・取引先数の目標があれば教えてください。継続率の想定もあれば併せて。", "会員数：1年目20人、2年目40人、3年目60人（目標継続率60％→70％）", "textarea")
+      ]}
+    ]
+  },
+  { id:"b4", eyebrow:"第4ブロック", title:"補助事業の内容", subtitle:"補助事業名・販路開拓の取組・業務効率化", note:"",
+    groups:[
+      { heading:"14. 補助事業名・全体像", questions:[
+        Q("Q14-1", true, "補助事業の名称（30文字以内）", "今回の取り組みを一言で表すとどのような事業名になりますか？（30文字以内、仮のもので構いません）", "パーソナルジムの開業と高い満足度による継続顧客の獲得", "text"),
+        Q("Q14-2", true, "補助事業の全体像", "今回の補助金を使って「何に投資し、何を実現するのか」を簡潔に教えてください。", "完全マンツーマンの個別指導に特化したパーソナルジムを開店し、顧客の定着と認知度向上により安定的な経営基盤を構築する。", "textarea")
+      ]},
+      { heading:"15. 販路開拓等の取組内容（投資項目ごとに回答）", note:"設備・工事・広報など、投資対象が複数ある場合は、本セクションを投資項目ごとに繰り返してご記入ください。", isInvestment:true },
+      { heading:"16. 業務効率化（生産性向上）の取組内容 ※様式2の任意記入欄", questions:[
+        Q("Q16-1", false, "業務効率化の取り組みの有無", "ITツールの導入による業務時間の削減など、業務効率化・生産性向上の取り組みを行う予定はありますか？", "ある（予約管理システムの導入）／ない", "select", {options:OPT.efficiencyYN}),
+        Q("Q16-2", false, "業務効率化の具体的内容と効果", "取り組みがある場合、その内容と、削減できる時間・コストの見込みを教えてください。", "予約管理システムの導入により、電話対応と予約管理に要していた月〇時間の作業を〇時間に削減できる見込み。", "textarea", {dependsOn:{id:"Q16-1", in:["ある"]}})
+      ]}
+    ]
+  },
+  { id:"b5", eyebrow:"第5ブロック", title:"補助事業の効果", subtitle:"定性的効果／定量的効果の算出パラメータ",
+    note:"公募要領では「販路開拓等の取組や業務効率化の取組を通じて、どのように生産性向上につながるのか」を必ず説明することが求められています。",
+    groups:[
+      { heading:"17. 定性的な効果", questions:[
+        Q("Q17-1", true, "販路開拓の効果（新たな顧客・販路）", "この取り組みにより、これまでアプローチできなかったどのような顧客層・販路を開拓できますか？", "これまで割烹料理店に馴染みのなかった層にアプローチし、中食ニーズを取り込むことで新たな顧客層を開拓できる。", "textarea"),
+        Q("Q17-2", true, "商品・サービスの質、顧客満足度への効果", "商品・サービスの質やお客様の満足度は、どのように向上しますか？", "販売直前までできたての温かさを維持でき、顧客満足度が向上する。", "textarea"),
+        Q("Q17-3", false, "業務・生産性への効果", "作業効率や生産性の面では、どのようなプラス効果がありますか？", "温度自動調整機能により温度チェックの手間が削減され、人手不足の解消や他業務への集中が可能になる。", "textarea"),
+        Q("Q17-4", false, "認知度・ブランド力への効果", "お店・会社の知名度やブランドイメージには、どのようなプラス効果がありますか？", "通行人への訴求により店舗の認知度が向上し、新規来店のきっかけをつくることができる。", "textarea"),
+        Q("Q17-5", false, "地域への貢献", "この事業が成功することで、地域にどのような良い影響を与えられますか？（特になければ「なし」）", "地元農家からの仕入れ量を年間〇％拡大して地産地消に貢献し、製造量拡大に伴う地元雇用を創出する。", "textarea"),
+        Q("Q17-6", true, "創業した事業の持続性への貢献", "この取り組みが、創業した事業を軌道に乗せ、継続していくことにどのようにつながりますか？", "一般的に高いとされる退会率を未然に防ぐ運営体制を整えることで顧客が定着し、安定した収益基盤を早期に確立できる。", "textarea")
+      ]},
+      { heading:"18. 定量的な効果の算出パラメータ", note:"ここでお伺いした数値をもとに、売上計画（1〜3年目）と算出根拠を作成します。", questions:[
+        Q("Q18-1", true, "売上増加のパターン", "この取り組みによる売上増は、主にどの形を想定していますか？", "④これらを組み合わせた形", "select", {options:OPT.salesPattern}),
+        Q("Q18-2", true, "新たに生まれる売上の単価", "新商品・新サービスの販売価格、または客単価の上昇額を教えてください。", "惣菜1パック2,000円／冷凍パック1個800円（税込）", "text"),
+        Q("Q18-3", true, "想定される販売件数・客数", "月にどのくらいの数量が売れる（何人のお客様が増える）と見込んでいますか？", "月間300個（1日あたり約10個）／会員数20名", "text"),
+        Q("Q18-4", true, "原価の想定", "その新商品・新サービスにかかる原価（または原価率）を教えてください。", "原価率30％（または「業界平均におまかせ」）", "text"),
+        Q("Q18-5", true, "新たに発生する経費", "この取り組みに伴って新しく毎月かかる経費（資材費、広告費、人件費など）はどのくらいですか？（特になければ「0円」）", "月額20,000円（包装資材＋SNS広告費）", "text"),
+        Q("Q18-6", true, "2年目・3年目の成長見込み", "計画2年目・3年目は、どのくらいの成長を見込んでいますか？件数や成長率でお答えください。", "2年目は企業PRページ作成の年間件数を9件、3年目は12件に設定。それ以外は初年度と同等。", "textarea"),
+        Q("Q18-7", false, "顧客の定着率・リピート率の想定", "新たに獲得したお客様のうち、どのくらいが継続利用されると見込んでいますか？", "増加した新規顧客のうち固定客となるのは約〇％。目標継続率は1年目60％、3年目70％。", "textarea")
+      ]}
+    ]
+  },
+  { id:"b6", eyebrow:"第6ブロック", title:"経費明細・資金調達方法", subtitle:"様式3対応", note:"様式3「Ⅱ．経費明細表」「Ⅲ．資金調達方法」を作成するための情報です。金額は見積書をベースにご記入ください。",
+    groups:[
+      { heading:"19. 経費明細", questions:[
+        Q("Q19-1", true, "経費区分ごとの内訳", "投資項目ごとに、該当する経費区分と金額を教えてください。経費区分は「①機械装置等費／②広報費／③ウェブサイト関連費／④展示会等出展費／⑤旅費／⑥新商品開発費／⑦借料／⑧委託・外注費」から選択します。", "⑧委託・外注費：店舗内装工事 200万円　①機械装置等費：トレーニングマシン 150万円　②広報費：看板設置 30万円", "textarea"),
+        Q("Q19-2", true, "各経費の必要理由", "それぞれの経費について、なぜ必要なのかを一言で教えてください。", "店舗内装工事：パーソナルトレーニングジムとして開店するため／トレーニングマシン：効率的に成果を実感できるプログラムを提供するため", "textarea"),
+        Q("Q19-3", true, "経費内訳（単価×回数）", "経費明細表には「単価×回数」の形で記載します。数量や回数が分かるものについて教えてください。", "折込みチラシ作成・印刷費 66,000円×3種／配布費 165,000円×3回／試供品製造費 44円×1,000個", "textarea"),
+        Q("Q19-4", true, "見積書の取得状況", "各投資項目の見積書は取得済みですか？", "内装工事は3社から相見積もりを取得済み。マシンは1社から取得済み。", "select", {options:OPT.quoteStatus}),
+        Q("Q19-5", true, "ウェブサイト関連費の有無と金額", "ホームページ制作、ECサイト構築、SNS広告など、ウェブサイト関連の費用はありますか？ある場合は金額を教えてください。", "オンラインショップのリニューアル 429,000円（税込）", "textarea"),
+        Note("※ウェブサイト関連費は、補助金交付申請額全体の1/4（最大50万円）が上限となるため、金額の把握が重要です。")
+      ]},
+      { heading:"20. 資金調達方法", questions:[
+        Q("Q20-1", true, "補助対象経費の調達方法", "補助対象経費（投資総額）を、どのように調達される予定ですか？（自己資金・補助金・金融機関からの借入・その他の内訳）", "自己資金218万円、持続化補助金200万円、合計418万円", "textarea"),
+        Q("Q20-2", true, "補助金相当額のつなぎ資金の手当方法", "補助金は精算払いのため、入金までの間の資金を手当てする必要があります。補助金相当額をどのように用意されますか？", "自己資金200万円で手当て／〇〇銀行からの借入989,333円で対応", "textarea"),
+        Q("Q20-3", false, "金融機関との相談状況", "融資を予定している場合、金融機関との相談は進んでいますか？", "日本政策金融公庫に相談済み、〇月に申込予定", "select", {options:OPT.bankConsult})
+      ]}
+    ]
+  },
+  { id:"b7", eyebrow:"第7ブロック", title:"提出書類・添付資料チェックリスト", subtitle:"ご提供資料・申請添付書類のチェック",
+    note:"本ブロックはQ&A形式ではなく、計画書の作成・補助金の申請にあたって収集・提出が必要な資料の一覧です。Q0でご確認いただいた事業形態（法人／個人事業主）や開業状況に応じて、必要書類が異なります。取得方法の目安：現在事項全部証明書・履歴事項全部証明書は法務局（オンライン発行も可）、開業届の控えは税務署への提出時の控えまたはe-Taxの受信通知から、特定創業支援等事業の証明書は認定市区町村の窓口、様式4は地域の商工会・商工会議所の窓口で手続きを行います。",
+    isChecklist:true }
+];
+
+const INVESTMENT_FIELDS = [
+  {sub:"Q15-1", label:"投資項目名", prompt:"投資する設備・工事・制作物などの名称を教えてください。", example:"店舗の内装工事／トレーニングマシンの導入／ウェブサイト制作／折込みチラシの制作・配布", type:"text"},
+  {sub:"Q15-2", label:"この取り組みを行う目的・狙い", prompt:"この投資を行う一番の狙いは何ですか？（第1ブロックの経営課題のどれを解決するものかも教えてください）", example:"効率的かつ成果を実感できるプログラムを提供するため。認知度の低さという課題を解決するため。", type:"textarea"},
+  {sub:"Q15-3", label:"具体的な内容・仕様", prompt:"何を、どのように行うのか、具体的に教えてください（設備なら製品名・型番・スペック、工事なら工事内容、広報なら媒体・部数・配布方法など）。", example:"スケルトン物件のため、受付・更衣室・トレーニングエリア・シャワーの内装工事を実施。トレーニングエリアは防音性のある素材、床は衝撃吸収性の高い素材で施工する。", type:"textarea"},
+  {sub:"Q15-4", label:"費用の内訳", prompt:"この取り組みにかかる費用を、内訳が分かる形で教えてください（税抜・税込の別も）。", example:"下地工事60万円＋設備工事100万円＋仕上げ工事40万円＝合計200万円（税抜）", type:"textarea"},
+  {sub:"Q15-5", label:"他社・従来と異なる点、創意工夫した点", prompt:"この取り組みについて、これまでの自社・他社の取り組みと異なる点や、工夫している点を教えてください。", example:"近隣店舗への騒音を防ぐ防音施工と、ケガ防止のための衝撃吸収素材の採用により、他店にはない安心して打ち込める環境を実現する。", type:"textarea"},
+  {note:"※公募要領で明示的に求められている記載事項です。審査上の差がつきやすい項目のため、ぜひ具体的にお聞かせください。"},
+  {sub:"Q15-6", label:"この取り組みによる収益化の方法", prompt:"この取り組みによって、どのように売上・収益が生まれますか？提供する商品・サービスごとの「価格・原価・利益」が分かると、計画書の説得力が大きく高まります。", example:"企業PRページ作成（ベーシック）：価格180,000円／原価80,000円／利益100,000円　SNSコンテンツ制作：価格30,000円／原価15,000円／利益15,000円", type:"textarea"},
+  {note:"※創業型では、この収益モデルが「4．補助事業の効果」の定量的効果と経営目標の算出根拠になります。"},
+  {sub:"Q15-7", label:"実施スケジュール", prompt:"見積取得・発注・納品（着工〜完工）・事業開始・支払完了の予定時期を教えてください。", example:"2026年8月に発注、10月に納品・公開、11月に顧客募集、12月に本格稼働、支払完了は2027年1月", type:"textarea"},
+  {sub:"Q15-8", label:"発注先の選定理由", prompt:"この発注先や機種を選んだ理由を教えてください（相見積もりを取得された場合はその旨も）。", example:"同性能の3社製品を比較検討し、価格と地域内での保守メンテナンス体制が最も優れている販売店を選定した。", type:"textarea", alwaysOptional:true}
+];
+
+const DOC_GROUP21 = [
+  {id:"D21-1", label:"開業届（個人事業の開業・廃業等届出書）の写し　※個人事業主の方"},
+  {id:"D21-2", label:"履歴事項全部証明書または現在事項全部証明書　※法人の方"},
+  {id:"D21-3", label:"特定創業支援等事業による支援を受けたことの証明書"},
+  {id:"D21-4", label:"直近の決算書または確定申告書　※開業済みで決算・確定申告を終えている場合"},
+  {id:"D21-5", label:"開業後の売上が分かる資料（月次試算表、売上台帳、レジデータ等）　※開業済みの方"},
+  {id:"D21-6", label:"創業計画書・事業計画書　※金融機関等に提出したものがあれば"},
+  {id:"D21-7", label:"借入金の返済予定表　※借入がある場合"},
+  {id:"D21-8", label:"今回の投資に関する見積書（可能であれば相見積もり2〜3社分）"},
+  {id:"D21-9", label:"導入予定の設備・システムのカタログ、パンフレット、仕様書"},
+  {id:"D21-10", label:"店舗・商品・設備等の写真、内装イメージ図・レイアウト図・完成予想図"},
+  {id:"D21-11", label:"代表者の経歴が分かる資料（職務経歴書、保有資格の証明書、受賞歴が分かるもの等）"},
+  {id:"D21-12", label:"（任意）顧客アンケートの結果、SNSのレビュー・口コミなど顧客の声が分かる資料"}
+];
+const DOC_COMMON = [
+  {id:"D22-1", label:"様式1：小規模事業者持続化補助金事業に係る申請書"},
+  {id:"D22-2", label:"様式2：経営計画書 兼 補助事業計画書①"},
+  {id:"D22-3", label:"様式3：補助事業計画書②（経費明細表・資金調達方法）"},
+  {id:"D22-4", label:"様式4：事業支援計画書（地域の商工会・商工会議所が発行　※発行に数日〜数週間かかる場合があるため早めの相談を推奨）"},
+  {id:"D22-5", label:"様式5：補助金交付申請書"},
+  {id:"D22-6", label:"様式6：宣誓・同意書"}
+];
+const DOC_SOGYO_SPECIFIC = [
+  {id:"D22-7", label:"特定創業支援等事業による支援を受けたことの証明書（写し）　※創業型の必須要件"}
+];
+const DOC_CORP = [
+  {id:"D22-8", label:"現在事項全部証明書または履歴事項全部証明書（申請日から3ヶ月以内に発行されたもの）"},
+  {id:"D22-9", label:"貸借対照表・損益計算書（直近1期分）　※決算期が到来していない場合は不要"},
+  {id:"D22-10", label:"株主名簿（様式2に出資者情報を記載していない場合）"}
+];
+const DOC_INDIV = [
+  {id:"D22-11", label:"開業届（個人事業の開業・廃業等届出書）の写し"},
+  {id:"D22-12", label:"確定申告書一式（第一表・第二表、収支内訳書または青色申告決算書）　※確定申告の時期が到来していない場合は不要"}
+];
+const DOC_SPECIAL = [
+  {id:"D22-13", label:"インボイス特例を利用する場合：様式9および適格請求書発行事業者の登録通知書の写し（補助上限が250万円に引き上げ）"},
+  {id:"D22-14", label:"各種加点を申請する場合：経営力向上計画の認定書、事業継続力強化計画の認定書など該当する証明書類"}
+];
+
+const DOC_STATES = ["未着手","準備済","該当なし"];
+
+/* ---------------- state ---------------- */
+const STORAGE_KEY = "hearing_form_sogyo_state_v1";
+let state = { answers:{}, step:0, invCount:1 };
+try{
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){ const parsed = JSON.parse(raw); if(parsed && typeof parsed==="object"){ state = Object.assign(state, parsed); } }
+}catch(e){}
+let hasResumed = Object.keys(state.answers||{}).length>0;
+if(!state.answers.R_DATE){
+  const d = new Date(); state.answers.R_DATE = d.toISOString().slice(0,10);
+}
+
+const STEP_META = [
+  {key:"cover", label:"はじめに"},
+  {key:"b0", label:"0．前提確認"},
+  {key:"b1", label:"1．企業概要"},
+  {key:"b2", label:"2．顧客・市場・強み"},
+  {key:"b3", label:"3．経営方針・プラン"},
+  {key:"b4", label:"4．補助事業の内容"},
+  {key:"b5", label:"5．補助事業の効果"},
+  {key:"b6", label:"6．経費明細・資金調達"},
+  {key:"b7", label:"7．提出書類チェック"},
+  {key:"review", label:"確認・保存"}
+];
+const RERENDER_TRIGGERS = new Set(["Q0-1","Q0-4","Q16-1"]);
+
+function saveState(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+let saveTimer=null;
+function scheduleSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(saveState, 250); }
+
+function isVisible(q){
+  if(!q.dependsOn) return true;
+  const v = state.answers[q.dependsOn.id];
+  if(q.dependsOn.in) return q.dependsOn.in.includes(v);
+  if(q.dependsOn.notIn) return v!==undefined && v!=="" && !q.dependsOn.notIn.includes(v);
+  return true;
+}
+
+function getInvestmentQuestions(){
+  const list=[];
+  for(let i=1;i<=state.invCount;i++){
+    INVESTMENT_FIELDS.forEach(f=>{
+      if(!f.sub) return;
+      const required = i===1 ? !f.alwaysOptional : false;
+      list.push({ id: f.sub+"#"+i, required, label:f.label, prompt:f.prompt, example:f.example, type:f.type });
+    });
+  }
+  return list;
+}
+
+function allVisibleQuestions(){
+  const list=[];
+  BLOCKS.forEach(b=>{
+    if(b.isChecklist) return;
+    (b.groups||[]).forEach(g=>{
+      if(g.isInvestment){ getInvestmentQuestions().forEach(q=>list.push(q)); return; }
+      (g.questions||[]).forEach(q=>{ if(q.type==="note") return; if(isVisible(q)) list.push(q); });
+    });
+  });
+  return list;
+}
+
+function visibleDocGroups(){
+  const entity = state.answers["Q0-1"];
+  const groups = [{title:null, items:DOC_COMMON}];
+  groups.push({title:"創業型に固有の必須書類", items:DOC_SOGYO_SPECIFIC});
+  if(entity!=="個人事業主") groups.push({title:"法人の場合の追加書類", items:DOC_CORP});
+  if(entity!=="法人") groups.push({title:"個人事業主の場合の追加書類", items:DOC_INDIV});
+  groups.push({title:"該当する場合のみ必要な書類", items:DOC_SPECIAL});
+  return groups;
+}
+
+function computeProgress(){
+  const qs = allVisibleQuestions();
+  let reqTotal=0, reqDone=0, allTotal=qs.length, allDone=0;
+  qs.forEach(q=>{
+    const v = state.answers[q.id];
+    const filled = v!==undefined && String(v).trim()!=="";
+    if(q.required){ reqTotal++; if(filled) reqDone++; }
+    if(filled) allDone++;
+  });
+  return {reqTotal, reqDone, allTotal, allDone};
+}
+
+/* ---------------- rendering ---------------- */
+const mainScroll = document.getElementById("mainScroll");
+const railEl = document.getElementById("rail");
+const trackerEl = document.getElementById("mobileTracker");
+const footerEl = document.getElementById("footerBar");
+
+function renderAll(){
+  renderRail(); renderTracker(); renderStep(); renderFooter();
+}
+
+function renderRail(){
+  let html = '<p class="rail-brand">小規模事業者持続化補助金＜創業型＞<small>事業者向けヒアリングフォーム</small></p>';
+  STEP_META.forEach((s,i)=>{
+    const cls = i===state.step ? "active" : (i<state.step ? "done" : "");
+    html += `<div class="rail-step ${cls}" data-step="${i}"><span class="rail-dot">${i}</span><span class="rail-label-wrap"><div class="rail-title">${s.label}</div></span></div>`;
+  });
+  railEl.innerHTML = html;
+  railEl.querySelectorAll(".rail-step").forEach(el=>{
+    el.addEventListener("click", ()=>{ goStep(parseInt(el.dataset.step,10)); });
+  });
+}
+
+function renderTracker(){
+  let html="";
+  STEP_META.forEach((s,i)=>{
+    const cls = i===state.step ? "active" : (i<state.step ? "done" : "");
+    html += `<div class="mt-pill ${cls}" data-step="${i}">${s.label}</div>`;
+  });
+  trackerEl.innerHTML = html;
+  trackerEl.querySelectorAll(".mt-pill").forEach(el=>{
+    el.addEventListener("click", ()=>{ goStep(parseInt(el.dataset.step,10)); });
+  });
+  const active = trackerEl.querySelector(".mt-pill.active");
+  if(active) active.scrollIntoView({inline:"center", block:"nearest"});
+}
+
+function fieldHtml(q, valueOverride){
+  const val = valueOverride!==undefined ? valueOverride : (state.answers[q.id] ?? "");
+  const answered = String(val).trim()!=="";
+  let inputHtml="";
+  if(q.type==="select"){
+    inputHtml = `<select class="q-input" id="f_${q.id}" data-qid="${q.id}"><option value="">選択してください</option>` +
+      q.options.map(o=>`<option value="${escAttr(o)}" ${o===val?"selected":""}>${esc(o)}</option>`).join("") + `</select>`;
+  } else if(q.type==="date"){
+    inputHtml = `<input class="q-input" type="date" id="f_${q.id}" data-qid="${q.id}" value="${escAttr(val)}">`;
+  } else if(q.type==="textarea"){
+    inputHtml = `<textarea class="q-input" id="f_${q.id}" data-qid="${q.id}" placeholder="ご回答をご記入ください">${esc(val)}</textarea>`;
+  } else {
+    inputHtml = `<input class="q-input" type="text" id="f_${q.id}" data-qid="${q.id}" value="${escAttr(val)}" placeholder="ご回答をご記入ください">`;
+  }
+  return `<div class="qcard ${answered?'answered':''}" id="card_${q.id}">
+    <div class="q-top"><span class="q-no">${q.id.startsWith("Q")?q.id.split("#")[0]:''}</span>
+      <span class="badge ${q.required?'req':'opt'}">${q.required?'必須':'任意'}</span></div>
+    <label class="q-label" for="f_${q.id}">${esc(q.label)}</label>
+    ${q.prompt?`<p class="q-prompt">${esc(q.prompt)}</p>`:''}
+    ${q.example?`<div class="q-example"><b>記入例：</b>${esc(q.example)}</div>`:''}
+    ${inputHtml}
+  </div>`;
+}
+
+function renderCover(){
+  const done = hasResumed;
+  let html = `<div class="cover-wrap">
+    <h1 class="cover-title serif">【小規模事業者持続化補助金＜創業型＞】<br>事業者向けヒアリングフォーム</h1>
+    <p class="cover-sub">経営計画（様式2）・補助事業計画（様式2・様式3）の作成に必要な情報を、一問一答形式でお伺いします。</p>`;
+  if(done){
+    html += `<div class="resume-note"><span>前回入力の続きから再開できます。</span><button id="btnReset">最初からやり直す</button></div>`;
+  }
+  html += `<div class="cover-card">
+      <h3>■ このシートの使い方</h3>
+      <p>難しく考えず、思いつくことを箇条書きで構いませんのでご記入ください。【必須】の設問は補助金の審査上とくに重要な項目、【任意】の設問は該当がなければ「なし」「わからない」で構いません。</p>
+      <p>創業型は、一般型と異なり「創業の経緯」「代表者のご経歴」「開業資金の調達」「収益モデル（価格・原価・利益）」が審査上きわめて重要になります。まだ実績が少ない分、計画の実現可能性をご経歴と数字の根拠で示す必要があるため、この点に関する設問が多くなっております。</p>
+      <div class="usage-grid">
+        <div class="usage-item"><b>記入例</b>各設問の記入例はパーソナルジムを例にしています。ご自身の事業に置き換えてご記入ください。</div>
+        <div class="usage-item"><b>分岐</b>開業済みの方と、これから開業される方とで、お答えいただく設問が一部異なります（設問にその旨を記載しています）。</div>
+        <div class="usage-item"><b>保存</b>入力内容はこの端末に自動的に一時保存されます。最後の確認画面でファイル保存・コピーができます。</div>
+        <div class="usage-item"><b>所要時間</b>全7ブロック・150問近くありますが、一度で終わらせる必要はありません。</div>
+      </div>
+    </div>
+    <div class="cover-card">
+      <h3>■ ご記入者情報</h3>
+      ${RESPONDENT_FIELDS.map(f=>`<div class="field-row"><label for="f_${f.id}">${esc(f.label)}${f.required?' <span class="badge req" style="vertical-align:2px;">必須</span>':''}</label>${f.type==='date'?`<input class="q-input" type="date" id="f_${f.id}" data-qid="${f.id}" value="${escAttr(state.answers[f.id]||'')}">`:`<input class="q-input" type="text" id="f_${f.id}" data-qid="${f.id}" value="${escAttr(state.answers[f.id]||'')}">`}</div>`).join("")}
+      <button class="btn primary start-btn" id="btnStart">${done ? "続きから入力する" : "回答をはじめる"} →</button>
+    </div>
+  </div>`;
+  return html;
+}
+
+function renderBlockContent(b){
+  let html = `<div class="block-header">
+    <p class="block-eyebrow">${esc(b.eyebrow)}</p>
+    <h2 class="block-title">${esc(b.title)}</h2>
+    <p class="block-subtitle">${esc(b.subtitle)}</p>
+    ${b.note?`<div class="block-note">${esc(b.note)}</div>`:''}
+  </div>`;
+
+  if(b.isChecklist){
+    html += renderChecklistBlock();
+    return html;
+  }
+
+  b.groups.forEach(g=>{
+    if(g.isInvestment){
+      html += `<div class="group-heading">${esc(g.heading)}</div>`;
+      if(g.note) html += `<p class="group-note">${esc(g.note)}</p>`;
+      html += renderInvestmentGroup();
+      return;
+    }
+    if(g.heading) html += `<div class="group-heading">${esc(g.heading)}</div>`;
+    if(g.note) html += `<p class="group-note">${esc(g.note)}</p>`;
+    g.questions.forEach(q=>{
+      if(q.type==="note"){ html += `<div class="inline-note">${esc(q.text)}</div>`; return; }
+      if(isVisible(q)) html += fieldHtml(q);
+    });
+  });
+  return html;
+}
+
+function renderInvestmentGroup(){
+  let html="";
+  const labels = ["①（必須：今回の中心となる取組）","②（該当する場合のみご記入ください）","③（該当する場合のみご記入ください）"];
+  for(let i=1;i<=state.invCount;i++){
+    html += `<div class="invitem"><div class="invitem-head"><span class="invitem-title">投資項目${labels[i-1]}</span>${i>1?`<button class="btn-remove" data-remove-inv="${i}">－ この項目を削除</button>`:''}</div>`;
+    INVESTMENT_FIELDS.forEach(f=>{
+      if(f.note){ html += `<div class="inline-note">${esc(f.note)}</div>`; return; }
+      const required = i===1 ? !f.alwaysOptional : false;
+      const q = {id:f.sub+"#"+i, required, label:f.label, prompt:f.prompt, example:f.example, type:f.type};
+      html += fieldHtml(q);
+    });
+    html += `</div>`;
+  }
+  if(state.invCount<3){
+    html += `<button class="btn-add" id="btnAddInv">＋ 投資項目を追加する（現在 ${state.invCount} / 3）</button>`;
+  }
+  return html;
+}
+
+function renderChecklistBlock(){
+  let html = `<div class="group-heading">21. 計画書作成のために提供いただきたい資料</div>`;
+  html += renderDocRows(DOC_GROUP21);
+  html += `<div class="group-heading">22. 補助金申請時に必要となる添付書類チェックリスト</div>`;
+  visibleDocGroups().forEach(g=>{
+    if(g.title) html += `<div class="doc-sub-heading">${esc(g.title)}</div>`;
+    else html += `<div class="doc-sub-heading">共通書類（すべての申請者）</div>`;
+    html += renderDocRows(g.items);
+  });
+  html += `<div class="inline-note">※創業型では、一般型で利用できる「賃金引上げ特例」は適用されません。</div>`;
+  return html;
+}
+
+function renderDocRows(items){
+  return items.map(d=>{
+    const st = state.answers["ST_"+d.id] || "未着手";
+    const note = state.answers["NT_"+d.id] || "";
+    const chips = DOC_STATES.map(s=>{
+      const cls = s===st ? (s==="準備済"?"on-ready":(s==="該当なし"?"on-none":"")) : "";
+      return `<button class="doc-chip ${cls}" data-doc-state="${d.id}" data-val="${s}">${s==="準備済"?"☑ ":s==="未着手"?"☐ ":"－ "}${s}</button>`;
+    }).join("");
+    return `<div class="doc-row"><div class="doc-main"><div class="doc-label">${esc(d.label)}</div><div class="doc-state">${chips}</div>
+      <div class="doc-note"><input type="text" placeholder="備考・メモ（任意）" data-doc-note="${d.id}" value="${escAttr(note)}"></div>
+    </div></div>`;
+  }).join("");
+}
+
+function renderReview(){
+  const p = computeProgress();
+  const missing=[];
+  allVisibleQuestions().forEach(q=>{
+    if(q.required && !String(state.answers[q.id]||"").trim()) missing.push(q);
+  });
+  let html = `<div class="block-header">
+    <p class="block-eyebrow">最終ステップ</p>
+    <h2 class="block-title">内容の確認・保存</h2>
+    <p class="block-subtitle">ここまでの回答を確認し、ファイルに保存またはコピーしてください。</p>
+  </div>
+  <div class="review-stats">
+    <div class="stat-tile"><div class="stat-num">${p.allDone} / ${p.allTotal}</div><div class="stat-label">全設問の回答済み数</div></div>
+    <div class="stat-tile"><div class="stat-num">${p.reqDone} / ${p.reqTotal}</div><div class="stat-label">必須設問の回答済み数</div></div>
+  </div>`;
+  if(missing.length){
+    html += `<div class="missing-box"><h4>未回答の必須項目が ${missing.length} 件あります</h4><ul class="missing-list">` +
+      missing.slice(0,20).map(q=>`<li><a data-jump="${q.id}">${esc(q.id.split("#")[0])}：${esc(q.label)}</a></li>`).join("") +
+      (missing.length>20?`<li>ほか ${missing.length-20} 件</li>`:"") + `</ul></div>`;
+  }
+  html += `<div class="save-section">
+    <h3>📄 Excel・スプレッドシート用（CSV形式）</h3>
+    <p class="hint">元のヒアリングシートと同じ列構成（設問No・区分・設問項目・ご回答）で保存します。担当の診断士へお渡しする際に便利です。</p>
+    <div class="save-btn-row"><button class="btn primary" id="btnSaveCsv">CSVファイルを保存する</button></div>
+  </div>
+  <div class="save-section">
+    <h3>📝 メール・チャット用（テキスト形式）</h3>
+    <p class="hint">読みやすい文章形式でまとめます。ファイル保存、またはコピーしてメールやLINEに貼り付けてご利用いただけます。</p>
+    <div class="save-btn-row">
+      <button class="btn primary" id="btnSaveTxt">テキストファイルを保存する</button>
+      <button class="btn" id="btnCopyTxt">全文をコピーする</button>
+    </div>
+    <textarea class="copy-area" id="copyArea" readonly></textarea>
+  </div>
+  <p class="reset-link"><a id="btnResetBottom">回答をすべて消去して最初からやり直す</a></p>`;
+  return html;
+}
+
+function renderStep(){
+  const meta = STEP_META[state.step];
+  let html="";
+  if(meta.key==="cover") html = renderCover();
+  else if(meta.key==="review") html = renderReview();
+  else {
+    const block = BLOCKS.find(b=>b.id===meta.key);
+    html = `<div>${renderBlockContent(block)}</div>`;
+  }
+  mainScroll.innerHTML = html;
+  attachStepEvents();
+  if(meta.key==="review"){
+    document.getElementById("copyArea").value = buildReadableText();
+  }
+  mainScroll.scrollTo({top:0});
+}
+
+function renderFooter(){
+  const p = computeProgress();
+  const pct = p.allTotal ? Math.round((p.allDone/p.allTotal)*100) : 0;
+  const isCover = state.step===0, isReview = state.step===STEP_META.length-1;
+  footerEl.innerHTML = `
+    <div class="footer-progress">
+      <div class="footer-progress-text"><span>${STEP_META[state.step].label}</span><span>${p.allDone}/${p.allTotal} 回答済み（必須 ${p.reqDone}/${p.reqTotal}）</span></div>
+      <div class="footer-bar-track"><div class="footer-bar-fill" style="width:${pct}%"></div></div>
+    </div>
+    ${isCover?'':'<button class="btn" id="btnPrev">← 戻る</button>'}
+    ${isReview?'':'<button class="btn primary" id="btnNext">'+(isCover?'始める':'次へ')+' →</button>'}
+  `;
+  const prev = document.getElementById("btnPrev");
+  const next = document.getElementById("btnNext");
+  if(prev) prev.addEventListener("click", ()=>goStep(state.step-1));
+  if(next) next.addEventListener("click", ()=>{ if(isCover){ startFromCover(); } else { goStep(state.step+1); } });
+}
+
+function startFromCover(){
+  hasResumed = true;
+  goStep(1);
+}
+
+function goStep(i){
+  if(i<0||i>=STEP_META.length) return;
+  state.step = i;
+  saveState();
+  renderAll();
+}
+
+function attachStepEvents(){
+  mainScroll.querySelectorAll("[data-qid]").forEach(el=>{
+    el.addEventListener("input", onFieldInput);
+    el.addEventListener("change", onFieldInput);
+  });
+  const addBtn = document.getElementById("btnAddInv");
+  if(addBtn) addBtn.addEventListener("click", ()=>{ if(state.invCount<3){ state.invCount++; saveState(); renderStep(); renderFooter(); }});
+  mainScroll.querySelectorAll("[data-remove-inv]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const idx = parseInt(el.dataset.removeInv,10);
+      INVESTMENT_FIELDS.forEach(f=>{ if(f.sub) delete state.answers[f.sub+"#"+idx]; });
+      if(idx < state.invCount){
+        for(let j=idx;j<state.invCount;j++){
+          INVESTMENT_FIELDS.forEach(f=>{
+            if(!f.sub) return;
+            state.answers[f.sub+"#"+j] = state.answers[f.sub+"#"+(j+1)];
+            delete state.answers[f.sub+"#"+(j+1)];
+          });
+        }
+      }
+      state.invCount--; saveState(); renderStep(); renderFooter();
+    });
+  });
+  mainScroll.querySelectorAll("[data-doc-state]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      state.answers["ST_"+el.dataset.docState] = el.dataset.val;
+      scheduleSave(); renderStep(); renderFooter();
+    });
+  });
+  mainScroll.querySelectorAll("[data-doc-note]").forEach(el=>{
+    el.addEventListener("input", ()=>{ state.answers["NT_"+el.dataset.docNote] = el.value; scheduleSave(); });
+  });
+  const btnStart = document.getElementById("btnStart");
+  if(btnStart) btnStart.addEventListener("click", startFromCover);
+  const btnReset = document.getElementById("btnReset");
+  if(btnReset) btnReset.addEventListener("click", doReset);
+  const btnResetBottom = document.getElementById("btnResetBottom");
+  if(btnResetBottom) btnResetBottom.addEventListener("click", doReset);
+  mainScroll.querySelectorAll("[data-jump]").forEach(el=>{
+    el.addEventListener("click", ()=>{ jumpToQuestion(el.dataset.jump); });
+  });
+  const btnSaveCsv = document.getElementById("btnSaveCsv");
+  if(btnSaveCsv) btnSaveCsv.addEventListener("click", saveCsv);
+  const btnSaveTxt = document.getElementById("btnSaveTxt");
+  if(btnSaveTxt) btnSaveTxt.addEventListener("click", saveTxt);
+  const btnCopyTxt = document.getElementById("btnCopyTxt");
+  if(btnCopyTxt) btnCopyTxt.addEventListener("click", copyTxt);
+}
+
+function onFieldInput(e){
+  const id = e.target.dataset.qid;
+  state.answers[id] = e.target.value;
+  if(RERENDER_TRIGGERS.has(id)){
+    scheduleSave();
+    renderStep(); renderFooter(); renderRail();
+    return;
+  }
+  const card = document.getElementById("card_"+id);
+  if(card){ card.classList.toggle("answered", String(e.target.value).trim()!=="") ; }
+  scheduleSave();
+  renderFooterLite();
+}
+function renderFooterLite(){
+  const p = computeProgress();
+  const pct = p.allTotal ? Math.round((p.allDone/p.allTotal)*100) : 0;
+  const txt = footerEl.querySelector(".footer-progress-text span:last-child");
+  const fill = footerEl.querySelector(".footer-bar-fill");
+  if(txt) txt.textContent = `${p.allDone}/${p.allTotal} 回答済み（必須 ${p.reqDone}/${p.reqTotal}）`;
+  if(fill) fill.style.width = pct+"%";
+}
+
+function jumpToQuestion(qid){
+  const base = qid.split("#")[0];
+  let targetStep = -1;
+  BLOCKS.forEach((b,i)=>{
+    (b.groups||[]).forEach(g=>{
+      (g.questions||[]).forEach(q=>{ if(q.id===base || qid===q.id) targetStep = i+1; });
+    });
+  });
+  if(qid.startsWith("Q15-")) targetStep = BLOCKS.findIndex(b=>b.id==="b4")+1;
+  if(targetStep<0) return;
+  goStep(targetStep);
+  setTimeout(()=>{
+    const el = document.getElementById("card_"+qid);
+    if(el) el.scrollIntoView({behavior:"smooth", block:"center"});
+  },60);
+}
+
+function doReset(){
+  if(!confirm("これまでの回答をすべて消去して、最初からやり直しますか？この操作は取り消せません。")) return;
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  state = { answers:{}, step:0, invCount:1 };
+  const d = new Date(); state.answers.R_DATE = d.toISOString().slice(0,10);
+  hasResumed=false;
+  renderAll();
+}
+
+/* ---------------- export builders ---------------- */
+function esc(s){ return String(s??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function escAttr(s){ return esc(s).replace(/"/g,"&quot;"); }
+
+function buildRows(){
+  const rows=[];
+  rows.push({no:"", section:"ご記入者情報", label:"事業者名（屋号・法人名）", required:"必須", answer:state.answers.R_BIZNAME||""});
+  rows.push({no:"", section:"ご記入者情報", label:"ご記入者のお名前", required:"必須", answer:state.answers.R_NAME||""});
+  rows.push({no:"", section:"ご記入者情報", label:"ご連絡先", required:"必須", answer:state.answers.R_CONTACT||""});
+  rows.push({no:"", section:"ご記入者情報", label:"ご記入日", required:"必須", answer:state.answers.R_DATE||""});
+  BLOCKS.forEach(b=>{
+    if(b.isChecklist){
+      rows.push({no:"", section:b.title, label:"21. 計画書作成のために提供いただきたい資料", required:"", answer:""});
+      DOC_GROUP21.forEach(d=>{
+        rows.push({no:d.id, section:b.title, label:d.label, required:"", answer:(state.answers["ST_"+d.id]||"未着手")+(state.answers["NT_"+d.id]?"／"+state.answers["NT_"+d.id]:"")});
+      });
+      rows.push({no:"", section:b.title, label:"22. 補助金申請時に必要となる添付書類チェックリスト", required:"", answer:""});
+      visibleDocGroups().forEach(g=>{
+        g.items.forEach(d=>{
+          rows.push({no:d.id, section:b.title, label:(g.title?g.title+"：":"")+d.label, required:"", answer:(state.answers["ST_"+d.id]||"未着手")+(state.answers["NT_"+d.id]?"／"+state.answers["NT_"+d.id]:"")});
+        });
+      });
+      return;
+    }
+    (b.groups||[]).forEach(g=>{
+      if(g.isInvestment){
+        for(let i=1;i<=state.invCount;i++){
+          rows.push({no:"", section:b.title, label:`■ 投資項目${i}`, required:"", answer:""});
+          INVESTMENT_FIELDS.forEach(f=>{
+            if(!f.sub) return;
+            const required = i===1 ? !f.alwaysOptional : false;
+            rows.push({no:f.sub, section:b.title, label:f.label, required:required?"必須":"任意", answer:state.answers[f.sub+"#"+i]||""});
+          });
+        }
+        return;
+      }
+      if(g.heading) rows.push({no:"", section:b.title, label:g.heading, required:"", answer:""});
+      (g.questions||[]).forEach(q=>{
+        if(q.type==="note") return;
+        if(!isVisible(q)) return;
+        rows.push({no:q.id, section:b.title, label:q.label, required:q.required?"必須":"任意", answer:state.answers[q.id]||""});
+      });
+    });
+  });
+  return rows;
+}
+
+function csvEscape(v){
+  v = String(v??"");
+  if(/[",\n]/.test(v)) return '"' + v.replace(/"/g,'""') + '"';
+  return v;
+}
+function buildCsv(){
+  const rows = buildRows();
+  let out = "﻿" + ["設問No","ブロック","設問項目","区分","ご回答"].map(csvEscape).join(",") + "\r\n";
+  rows.forEach(r=>{
+    out += [r.no, r.section, r.label, r.required, r.answer].map(csvEscape).join(",") + "\r\n";
+  });
+  return out;
+}
+
+function buildReadableText(){
+  const rows = buildRows();
+  let out = "【小規模事業者持続化補助金＜創業型＞】事業者向けヒアリングフォーム 回答控え\n";
+  out += "事業者名：" + (state.answers.R_BIZNAME||"") + "　記入者：" + (state.answers.R_NAME||"") + "　記入日：" + (state.answers.R_DATE||"") + "\n";
+  out += "連絡先：" + (state.answers.R_CONTACT||"") + "\n";
+  out += "生成日時：" + new Date().toLocaleString("ja-JP") + "\n";
+  out += "========================================\n\n";
+  let curSection="";
+  rows.forEach(r=>{
+    if(r.section!==curSection){ curSection=r.section; out += "\n■ "+curSection+"\n"; }
+    if(!r.required && !r.answer && r.label.match(/^(■|\d+\.)/)){ out += "\n"+r.label+"\n"; return; }
+    out += "・" + (r.no?r.no+" ":"") + r.label + (r.required?"【"+r.required+"】":"") + "\n";
+    out += "  → " + (r.answer || "（未回答）") + "\n";
+  });
+  return out;
+}
+
+function safeFileBase(){
+  const biz = (state.answers.R_BIZNAME||"事業者").replace(/[\\/:*?"<>|]/g,"");
+  const date = (state.answers.R_DATE||"").replace(/-/g,"");
+  return `ヒアリング回答_創業型_${biz}_${date}`;
+}
+
+function showToast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(()=>t.classList.remove("show"), 2600);
+}
+
+function trySaveFile(filename, content, mime){
+  try{
+    const blob = new Blob([content], {type: mime + ";charset=utf-8"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    showToast("保存しました：" + filename);
+  }catch(e){
+    const ca = document.getElementById("copyArea");
+    if(ca){ ca.value = content; ca.scrollIntoView({behavior:"smooth", block:"center"}); }
+    showToast("自動保存に失敗したため、下の欄からコピーしてご利用ください");
+  }
+}
+function saveCsv(){ trySaveFile(safeFileBase()+".csv", buildCsv(), "text/csv"); }
+function saveTxt(){ trySaveFile(safeFileBase()+".txt", buildReadableText(), "text/plain"); }
+async function copyTxt(){
+  const text = buildReadableText();
+  const ca = document.getElementById("copyArea");
+  if(ca) ca.value = text;
+  try{
+    await navigator.clipboard.writeText(text);
+    showToast("コピーしました");
+  }catch(e){
+    if(ca){ ca.focus(); ca.select(); try{ document.execCommand("copy"); showToast("コピーしました"); }catch(e2){ showToast("コピーできませんでした。テキストを選択してコピーしてください"); } }
+  }
+}
+
+renderAll();
+</script>
+</body>
+</html>
