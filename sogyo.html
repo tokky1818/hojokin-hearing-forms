@@ -78,7 +78,7 @@ body{
 h1,h2,h3,.serif{font-family:"Shippori Mincho",serif;}
 h1,h2,h3{text-wrap:balance;}
 button{font-family:inherit;}
-input,textarea,select{font-family:inherit;font-size:15px;color:var(--text);}
+input,textarea,select{font-family:inherit;font-size:16px;color:var(--text);}
 .app-shell{display:flex;min-height:100vh;}
 .rail{
   width:248px;flex:none;background:var(--surface);border-right:1px solid var(--border);
@@ -133,6 +133,17 @@ input,textarea,select{font-family:inherit;font-size:15px;color:var(--text);}
 }
 .skip-label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:13px;line-height:1.7;color:var(--accent-strong);}
 .skip-label input{margin-top:3px;width:16px;height:16px;flex:none;accent-color:var(--accent);}
+.block-jumpnav{display:flex;gap:6px;overflow-x:auto;margin:-6px 0 24px;padding-bottom:4px;-webkit-overflow-scrolling:touch;}
+.jump-chip{
+  flex:none;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;
+  padding:6px 12px;border-radius:99px;border:1.5px solid var(--border-strong);background:var(--surface);
+  color:var(--text-muted);cursor:pointer;font-weight:600;
+}
+.jump-chip:hover{border-color:var(--accent);color:var(--accent-strong);background:var(--accent-soft);}
+.done-box{background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--radius);padding:14px 16px;margin-bottom:20px;}
+.done-box h4{margin:0 0 4px;font-size:13px;color:var(--accent-strong);}
+.done-box p{margin:0;font-size:12px;color:var(--text-muted);line-height:1.7;}
+.footer-saved{font-size:10.5px;color:var(--text-muted);opacity:.75;margin-left:8px;font-variant-numeric:tabular-nums;}
 
 .qcard{
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
@@ -155,7 +166,7 @@ input,textarea,select{font-family:inherit;font-size:15px;color:var(--text);}
   width:100%;border:1.5px solid var(--border-strong);border-radius:9px;padding:10px 12px;
   background:var(--surface);color:var(--text);transition:border-color .15s,box-shadow .15s;
 }
-textarea.q-input{min-height:80px;resize:vertical;line-height:1.6;}
+textarea.q-input{min-height:80px;resize:none;overflow:hidden;line-height:1.6;}
 .q-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft);}
 select.q-input{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--text-muted) 50%),linear-gradient(135deg,var(--text-muted) 50%,transparent 50%);background-position:calc(100% - 20px) center,calc(100% - 15px) center;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:34px;}
 
@@ -570,11 +581,25 @@ const STEP_META = [
 ];
 const RERENDER_TRIGGERS = new Set(["Q0-1","Q0-4","Q16-1"]);
 
+let lastSavedAt = null;
 function saveState(){
-  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    lastSavedAt = new Date();
+    updateSavedIndicator();
+  }catch(e){}
 }
 let saveTimer=null;
 function scheduleSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(saveState, 250); }
+function updateSavedIndicator(){
+  const el = document.getElementById("savedIndicator");
+  if(!el) return;
+  if(!lastSavedAt){ el.textContent = ""; return; }
+  const hh = String(lastSavedAt.getHours()).padStart(2,"0");
+  const mm = String(lastSavedAt.getMinutes()).padStart(2,"0");
+  const ss = String(lastSavedAt.getSeconds()).padStart(2,"0");
+  el.textContent = `最終保存 ${hh}:${mm}:${ss}`;
+}
 
 function isVisible(q){
   if(!q.dependsOn) return true;
@@ -751,14 +776,19 @@ function renderBlockContent(b){
     }
   }
 
-  b.groups.forEach(g=>{
+  const navGroups = b.groups.map((g,idx)=> g.heading ? {heading:g.heading, id:`grp_${b.id}_${idx}`} : null).filter(Boolean);
+  if(navGroups.length > 1){
+    html += `<div class="block-jumpnav">` + navGroups.map(ng=>`<button type="button" class="jump-chip" data-jump-group="${ng.id}">${esc(ng.heading)}</button>`).join('') + `</div>`;
+  }
+
+  b.groups.forEach((g,idx)=>{
     if(g.isInvestment){
-      html += `<div class="group-heading">${esc(g.heading)}</div>`;
+      html += `<div class="group-heading" id="grp_${b.id}_${idx}">${esc(g.heading)}</div>`;
       if(g.note) html += `<p class="group-note">${esc(g.note)}</p>`;
       html += renderInvestmentGroup();
       return;
     }
-    if(g.heading) html += `<div class="group-heading">${esc(g.heading)}</div>`;
+    if(g.heading) html += `<div class="group-heading" id="grp_${b.id}_${idx}">${esc(g.heading)}</div>`;
     if(g.note) html += `<p class="group-note">${esc(g.note)}</p>`;
     g.questions.forEach(q=>{
       if(q.type==="note"){ html += `<div class="inline-note">${esc(q.text)}</div>`; return; }
@@ -835,6 +865,8 @@ function renderReview(){
     html += `<div class="missing-box"><h4>未回答の必須項目が ${missing.length} 件あります</h4><ul class="missing-list">` +
       missing.slice(0,20).map(q=>`<li><a data-jump="${q.id}">${esc(q.id.split("#")[0])}：${esc(q.label)}</a></li>`).join("") +
       (missing.length>20?`<li>ほか ${missing.length-20} 件</li>`:"") + `</ul></div>`;
+  } else if(p.reqTotal>0) {
+    html += `<div class="done-box"><h4>✓ 必須項目にすべて回答済みです</h4><p>この内容で保存・送付いただけます。任意項目は空欄のままで構いません。</p></div>`;
   }
   html += `<div class="save-section">
     <h3>📄 Excel・スプレッドシート用（CSV形式）</h3>
@@ -877,7 +909,7 @@ function renderFooter(){
   const isCover = state.step===0, isReview = state.step===STEP_META.length-1;
   footerEl.innerHTML = `
     <div class="footer-progress">
-      <div class="footer-progress-text"><span>${STEP_META[state.step].label}</span><span>${progressText(p)}</span></div>
+      <div class="footer-progress-text"><span>${STEP_META[state.step].label}<span id="savedIndicator" class="footer-saved"></span></span><span>${progressText(p)}</span></div>
       <div class="footer-bar-track"><div class="footer-bar-fill" style="width:${pct}%"></div></div>
     </div>
     ${isCover?'':'<button class="btn" id="btnPrev">← 戻る</button>'}
@@ -887,6 +919,7 @@ function renderFooter(){
   const next = document.getElementById("btnNext");
   if(prev) prev.addEventListener("click", ()=>goStep(state.step-1));
   if(next) next.addEventListener("click", ()=>{ if(isCover){ startFromCover(); } else { goStep(state.step+1); } });
+  updateSavedIndicator();
 }
 
 function startFromCover(){
@@ -910,6 +943,7 @@ function attachStepEvents(){
   if(addBtn) addBtn.addEventListener("click", ()=>{ if(state.invCount<3){ state.invCount++; saveState(); renderStep(); renderFooter(); }});
   mainScroll.querySelectorAll("[data-remove-inv]").forEach(el=>{
     el.addEventListener("click", ()=>{
+      if(!confirm("この投資項目の入力内容をすべて削除します。よろしいですか？この操作は取り消せません。")) return;
       const idx = parseInt(el.dataset.removeInv,10);
       INVESTMENT_FIELDS.forEach(f=>{ if(f.sub) delete state.answers[f.sub+"#"+idx]; });
       if(idx < state.invCount){
@@ -955,6 +989,20 @@ function attachStepEvents(){
   if(btnSaveTxt) btnSaveTxt.addEventListener("click", saveTxt);
   const btnCopyTxt = document.getElementById("btnCopyTxt");
   if(btnCopyTxt) btnCopyTxt.addEventListener("click", copyTxt);
+  mainScroll.querySelectorAll("[data-jump-group]").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      const target = document.getElementById(el.dataset.jumpGroup);
+      if(target) target.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+  });
+  mainScroll.querySelectorAll("textarea.q-input").forEach(el=>{
+    autoGrow(el);
+    el.addEventListener("input", ()=>autoGrow(el));
+  });
+}
+function autoGrow(el){
+  el.style.height = "auto";
+  el.style.height = el.scrollHeight + "px";
 }
 
 function onFieldInput(e){
@@ -962,7 +1010,9 @@ function onFieldInput(e){
   state.answers[id] = e.target.value;
   if(RERENDER_TRIGGERS.has(id)){
     scheduleSave();
+    const savedScroll = mainScroll.scrollTop;
     renderStep(); renderFooter(); renderRail();
+    mainScroll.scrollTop = savedScroll;
     return;
   }
   const card = document.getElementById("card_"+id);
@@ -1002,6 +1052,7 @@ function doReset(){
   state = { answers:{}, step:0, invCount:1, skip:{} };
   const d = new Date(); state.answers.R_DATE = d.toISOString().slice(0,10);
   hasResumed=false;
+  lastSavedAt = null;
   renderAll();
 }
 
