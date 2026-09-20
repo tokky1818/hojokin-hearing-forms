@@ -233,6 +233,11 @@ select.q-input{appearance:none;background-image:linear-gradient(45deg,transparen
   margin-bottom:18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
 }
 .resume-note button{font-size:11.5px;background:none;border:none;color:var(--danger);cursor:pointer;text-decoration:underline;padding:0;}
+.hash-resume-note{background:var(--required-soft);color:var(--required);}
+.btn-sm{padding:6px 12px;font-size:11.5px;}
+.qr-panel{margin-top:14px;padding-top:14px;border-top:1px dashed var(--border);text-align:center;}
+.qr-canvas{display:inline-block;background:#fff;padding:10px;border-radius:10px;line-height:0;}
+.qr-hint{font-size:11.5px;color:var(--text-muted);margin:10px 0;line-height:1.7;}
 .start-btn{width:100%;padding:14px;font-size:15px;margin-top:6px;border-radius:10px;}
 
 .review-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px;}
@@ -277,6 +282,7 @@ select.q-input{appearance:none;background-image:linear-gradient(45deg,transparen
 }
 </style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 
@@ -557,6 +563,7 @@ const DOC_STATES = ["未着手","準備済","該当なし"];
 
 /* ---------------- state ---------------- */
 const STORAGE_KEY = "hearing_form_sogyo_state_v1";
+const FORM_ID = "sogyo-v1";
 let state = { answers:{}, step:0, invCount:1, skip:{} };
 try{
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -666,6 +673,82 @@ function progressText(p){
   return `${p.allDone}/${p.allTotal} 回答済み（必須 ${p.reqDone}/${p.reqTotal}${skipPart}）`;
 }
 
+/* ---------------- cross-device transfer ---------------- */
+let pendingResumePayload = null;
+let qrPanelOpen = false;
+const RESUME_LINK_LIMIT = 1800;
+
+function utf8ToBase64(str){
+  const bytes = new TextEncoder().encode(str);
+  let binary = "";
+  bytes.forEach(b => binary += String.fromCharCode(b));
+  return btoa(binary);
+}
+function base64ToUtf8(str){
+  const binary = atob(str);
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
+}
+
+function buildTransferPayload(){
+  return { formId: FORM_ID, savedAt: new Date().toISOString(), answers: state.answers, invCount: state.invCount, skip: state.skip };
+}
+function buildResumeLink(){
+  const encoded = utf8ToBase64(JSON.stringify(buildTransferPayload()));
+  return { url: location.origin + location.pathname + "#resume=" + encoded, size: encoded.length };
+}
+function applyPayloadToState(payload){
+  state.answers = payload.answers || {};
+  state.invCount = payload.invCount || 1;
+  state.skip = payload.skip || {};
+  state.step = 0;
+  saveState();
+  hasResumed = Object.keys(state.answers).length>0;
+}
+function clearResumeHash(){
+  try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){}
+}
+function checkResumeHash(){
+  if(location.hash && location.hash.indexOf("#resume=")===0){
+    try{
+      const encoded = decodeURIComponent(location.hash.slice(8));
+      const payload = JSON.parse(base64ToUtf8(encoded));
+      if(payload && payload.formId===FORM_ID && payload.answers){ pendingResumePayload = payload; }
+    }catch(e){}
+  }
+}
+function exportProgressFile(){
+  trySaveFile(safeFileBase()+"_進捗.json", JSON.stringify(buildTransferPayload(), null, 2), "application/json");
+}
+function importProgressFile(file){
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const payload = JSON.parse(reader.result);
+      if(!payload || payload.formId !== FORM_ID){ showToast("このフォーム用の進捗ファイルではないようです"); return; }
+      if(!confirm("読み込んだ内容で、この端末の入力内容を上書きします。よろしいですか？")) return;
+      applyPayloadToState(payload);
+      showToast("進捗ファイルを読み込みました");
+      renderAll();
+    }catch(e){
+      showToast("ファイルの読み込みに失敗しました。正しい進捗ファイルかご確認ください");
+    }
+  };
+  reader.readAsText(file, "utf-8");
+}
+function renderQrPanel(){
+  const {size} = buildResumeLink();
+  if(size > RESUME_LINK_LIMIT){
+    return `<div class="qr-panel"><p class="qr-hint">現在の入力量が多く、QRコード／リンクでは送れません。上の「進捗をファイルに保存」をご利用ください。</p></div>`;
+  }
+  return `<div class="qr-panel">
+    <div class="qr-canvas" id="qrCanvas"></div>
+    <p class="qr-hint">QRコードを別端末のカメラで読み取るか、下のボタンでリンクをコピーしてください。入力内容が含まれるリンクのため、第三者と共有しないようご注意ください。</p>
+    <div class="save-btn-row"><button class="btn" id="btnCopyResumeLink">リンクをコピーする</button></div>
+  </div>`;
+}
+
 /* ---------------- rendering ---------------- */
 const mainScroll = document.getElementById("mainScroll");
 const railEl = document.getElementById("rail");
@@ -731,6 +814,16 @@ function renderCover(){
   let html = `<div class="cover-wrap">
     <h1 class="cover-title serif">【小規模事業者持続化補助金＜創業型＞】<br>事業者向けヒアリングフォーム</h1>
     <p class="cover-sub">経営計画（様式2）・補助事業計画（様式2・様式3）の作成に必要な情報を、一問一答形式でお伺いします。</p>`;
+  if(pendingResumePayload){
+    const savedAtStr = pendingResumePayload.savedAt ? new Date(pendingResumePayload.savedAt).toLocaleString("ja-JP") : "";
+    html += `<div class="resume-note hash-resume-note">
+      <span>別の端末からの引き継ぎデータが見つかりました${savedAtStr?'（'+esc(savedAtStr)+'時点）':''}。読み込みますか？現在この端末にある入力内容は上書きされます。</span>
+      <span style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn primary btn-sm" id="btnApplyResumeHash">読み込む</button>
+        <button class="btn btn-sm" id="btnDismissResumeHash">無視する</button>
+      </span>
+    </div>`;
+  }
   if(done){
     html += `<div class="resume-note"><span>前回入力の続きから再開できます。</span><button id="btnReset">最初からやり直す</button></div>`;
   }
@@ -749,6 +842,17 @@ function renderCover(){
       <h3>■ ご記入者情報</h3>
       ${RESPONDENT_FIELDS.map(f=>`<div class="field-row"><label for="f_${f.id}">${esc(f.label)}${f.required?' <span class="badge req" style="vertical-align:2px;">必須</span>':''}</label>${f.type==='date'?`<input class="q-input" type="date" id="f_${f.id}" data-qid="${f.id}" value="${escAttr(state.answers[f.id]||'')}">`:`<input class="q-input" type="text" id="f_${f.id}" data-qid="${f.id}" value="${escAttr(state.answers[f.id]||'')}">`}</div>`).join("")}
       <button class="btn primary start-btn" id="btnStart">${done ? "続きから入力する" : "回答をはじめる"} →</button>
+    </div>
+    <div class="cover-card">
+      <h3>■ 別の端末で続きを入力する</h3>
+      <p>この端末に保存されている入力内容を、他のスマートフォンやパソコンに引き継ぐことができます。</p>
+      <div class="save-btn-row">
+        <button class="btn" id="btnExportProgress">進捗をファイルに保存</button>
+        <button class="btn" id="btnImportProgress">ファイルから読み込む</button>
+      </div>
+      <input type="file" id="importFileInput" accept="application/json,.json" style="display:none">
+      <button class="btn ghost" type="button" id="btnToggleQr" style="width:100%;margin-top:6px;">${qrPanelOpen ? "QRコード／リンクを閉じる" : "QRコード／リンクで送る（入力量が少ない場合）"}</button>
+      ${qrPanelOpen ? renderQrPanel() : ''}
     </div>
   </div>`;
   return html;
@@ -980,6 +1084,46 @@ function attachStepEvents(){
   if(btnReset) btnReset.addEventListener("click", doReset);
   const btnResetBottom = document.getElementById("btnResetBottom");
   if(btnResetBottom) btnResetBottom.addEventListener("click", doReset);
+  const btnApplyResumeHash = document.getElementById("btnApplyResumeHash");
+  if(btnApplyResumeHash) btnApplyResumeHash.addEventListener("click", ()=>{
+    applyPayloadToState(pendingResumePayload);
+    pendingResumePayload = null;
+    clearResumeHash();
+    showToast("引き継ぎデータを読み込みました");
+    renderAll();
+  });
+  const btnDismissResumeHash = document.getElementById("btnDismissResumeHash");
+  if(btnDismissResumeHash) btnDismissResumeHash.addEventListener("click", ()=>{
+    pendingResumePayload = null;
+    clearResumeHash();
+    renderStep();
+  });
+  const btnExportProgress = document.getElementById("btnExportProgress");
+  if(btnExportProgress) btnExportProgress.addEventListener("click", exportProgressFile);
+  const btnImportProgress = document.getElementById("btnImportProgress");
+  const importFileInput = document.getElementById("importFileInput");
+  if(btnImportProgress && importFileInput) btnImportProgress.addEventListener("click", ()=>importFileInput.click());
+  if(importFileInput) importFileInput.addEventListener("change", (e)=>{
+    const file = e.target.files[0];
+    if(file) importProgressFile(file);
+    e.target.value = "";
+  });
+  const btnToggleQr = document.getElementById("btnToggleQr");
+  if(btnToggleQr) btnToggleQr.addEventListener("click", ()=>{ qrPanelOpen = !qrPanelOpen; renderStep(); });
+  const qrCanvas = document.getElementById("qrCanvas");
+  if(qrCanvas){
+    if(window.QRCode){
+      qrCanvas.innerHTML = "";
+      new QRCode(qrCanvas, { text: buildResumeLink().url, width:180, height:180, correctLevel: QRCode.CorrectLevel.M });
+    } else {
+      qrCanvas.textContent = "QRコードを生成できませんでした。下のボタンでリンクをコピーしてください。";
+    }
+  }
+  const btnCopyResumeLink = document.getElementById("btnCopyResumeLink");
+  if(btnCopyResumeLink) btnCopyResumeLink.addEventListener("click", ()=>{
+    const {url} = buildResumeLink();
+    navigator.clipboard.writeText(url).then(()=>showToast("リンクをコピーしました")).catch(()=>showToast("コピーできませんでした"));
+  });
   mainScroll.querySelectorAll("[data-jump]").forEach(el=>{
     el.addEventListener("click", ()=>{ jumpToQuestion(el.dataset.jump); });
   });
@@ -1178,6 +1322,7 @@ async function copyTxt(){
   }
 }
 
+checkResumeHash();
 renderAll();
 </script>
 </body>
