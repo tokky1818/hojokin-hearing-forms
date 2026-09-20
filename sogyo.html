@@ -127,6 +127,12 @@ input,textarea,select{font-family:inherit;font-size:15px;color:var(--text);}
   font-size:12px;color:var(--text-muted);background:var(--surface-alt);border:1px solid var(--border);
   border-radius:10px;padding:10px 14px;margin:-4px 0 14px;line-height:1.75;
 }
+.skip-box{
+  background:var(--accent-soft);border:1.5px solid var(--accent);border-radius:var(--radius);
+  padding:14px 16px;margin-bottom:20px;
+}
+.skip-label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;font-size:13px;line-height:1.7;color:var(--accent-strong);}
+.skip-label input{margin-top:3px;width:16px;height:16px;flex:none;accent-color:var(--accent);}
 
 .qcard{
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
@@ -218,7 +224,7 @@ select.q-input{appearance:none;background-image:linear-gradient(45deg,transparen
 .resume-note button{font-size:11.5px;background:none;border:none;color:var(--danger);cursor:pointer;text-decoration:underline;padding:0;}
 .start-btn{width:100%;padding:14px;font-size:15px;margin-top:6px;border-radius:10px;}
 
-.review-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px;}
+.review-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px;}
 .stat-tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
 .stat-num{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-strong);}
 .stat-label{font-size:11.5px;color:var(--text-muted);margin-top:2px;}
@@ -462,6 +468,7 @@ const BLOCKS = [
     ]
   },
   { id:"b6", eyebrow:"第6ブロック", title:"経費明細・資金調達方法", subtitle:"様式3対応", note:"様式3「Ⅱ．経費明細表」「Ⅲ．資金調達方法」を作成するための情報です。金額は見積書をベースにご記入ください。",
+    skippable:true,
     groups:[
       { heading:"19. 経費明細", questions:[
         Q("Q19-1", true, "経費区分ごとの内訳", "投資項目ごとに、該当する経費区分と金額を教えてください。経費区分は「①機械装置等費／②広報費／③ウェブサイト関連費／④展示会等出展費／⑤旅費／⑥新商品開発費／⑦借料／⑧委託・外注費」から選択します。", "⑧委託・外注費：店舗内装工事 200万円　①機械装置等費：トレーニングマシン 150万円　②広報費：看板設置 30万円", "textarea"),
@@ -539,7 +546,7 @@ const DOC_STATES = ["未着手","準備済","該当なし"];
 
 /* ---------------- state ---------------- */
 const STORAGE_KEY = "hearing_form_sogyo_state_v1";
-let state = { answers:{}, step:0, invCount:1 };
+let state = { answers:{}, step:0, invCount:1, skip:{} };
 try{
   const raw = localStorage.getItem(STORAGE_KEY);
   if(raw){ const parsed = JSON.parse(raw); if(parsed && typeof parsed==="object"){ state = Object.assign(state, parsed); } }
@@ -589,13 +596,17 @@ function getInvestmentQuestions(){
   return list;
 }
 
+function isBlockSkipped(b){
+  return !!(b.skippable && state.skip && state.skip[b.id]);
+}
+
 function allVisibleQuestions(){
   const list=[];
   BLOCKS.forEach(b=>{
     if(b.isChecklist) return;
     (b.groups||[]).forEach(g=>{
-      if(g.isInvestment){ getInvestmentQuestions().forEach(q=>list.push(q)); return; }
-      (g.questions||[]).forEach(q=>{ if(q.type==="note") return; if(isVisible(q)) list.push(q); });
+      if(g.isInvestment){ getInvestmentQuestions().forEach(q=>list.push(Object.assign({_blockId:b.id}, q))); return; }
+      (g.questions||[]).forEach(q=>{ if(q.type==="note") return; if(isVisible(q)) list.push(Object.assign({_blockId:b.id}, q)); });
     });
   });
   return list;
@@ -613,14 +624,21 @@ function visibleDocGroups(){
 
 function computeProgress(){
   const qs = allVisibleQuestions();
-  let reqTotal=0, reqDone=0, allTotal=qs.length, allDone=0;
+  let reqTotal=0, reqDone=0, allTotal=qs.length, allDone=0, skipTotal=0, skipDone=0;
   qs.forEach(q=>{
+    const skipped = state.skip && state.skip[q._blockId];
     const v = state.answers[q.id];
-    const filled = v!==undefined && String(v).trim()!=="";
+    const filled = skipped || (v!==undefined && String(v).trim()!=="");
     if(q.required){ reqTotal++; if(filled) reqDone++; }
     if(filled) allDone++;
+    if(skipped){ skipTotal++; skipDone++; }
   });
-  return {reqTotal, reqDone, allTotal, allDone};
+  return {reqTotal, reqDone, allTotal, allDone, skipTotal, skipDone};
+}
+
+function progressText(p){
+  const skipPart = p.skipTotal>0 ? `、省略 ${p.skipDone}/${p.skipTotal}` : '';
+  return `${p.allDone}/${p.allTotal} 回答済み（必須 ${p.reqDone}/${p.reqTotal}${skipPart}）`;
 }
 
 /* ---------------- rendering ---------------- */
@@ -724,6 +742,15 @@ function renderBlockContent(b){
     return html;
   }
 
+  if(b.skippable){
+    const skipped = isBlockSkipped(b);
+    html += `<div class="skip-box"><label class="skip-label"><input type="checkbox" data-skip-block="${b.id}" ${skipped?'checked':''}><span>このブロックは、実務上は補助事業計画が固まった後（見積書取得後など）に確定することが多い内容です。今の段階では未定でも構わない場合は、チェックを入れて先に進めることができます。</span></label></div>`;
+    if(skipped){
+      html += `<div class="inline-note">このブロックの入力は省略されています。チェックを外すと、通常どおり入力を再開できます。</div>`;
+      return html;
+    }
+  }
+
   b.groups.forEach(g=>{
     if(g.isInvestment){
       html += `<div class="group-heading">${esc(g.heading)}</div>`;
@@ -749,7 +776,7 @@ function renderInvestmentGroup(){
     INVESTMENT_FIELDS.forEach(f=>{
       if(f.note){ html += `<div class="inline-note">${esc(f.note)}</div>`; return; }
       const required = i===1 ? !f.alwaysOptional : false;
-      const q = {id:f.sub+"#"+i, required, label:f.label, prompt:f.prompt, example:f.example, type:f.type};
+      const q = {id:f.sub+"#"+i, required, label:f.label, prompt:f.prompt, example:f.example, type:f.type, options:f.options};
       html += fieldHtml(q);
     });
     html += `</div>`;
@@ -791,7 +818,8 @@ function renderReview(){
   const p = computeProgress();
   const missing=[];
   allVisibleQuestions().forEach(q=>{
-    if(q.required && !String(state.answers[q.id]||"").trim()) missing.push(q);
+    const skipped = state.skip && state.skip[q._blockId];
+    if(q.required && !skipped && !String(state.answers[q.id]||"").trim()) missing.push(q);
   });
   let html = `<div class="block-header">
     <p class="block-eyebrow">最終ステップ</p>
@@ -801,6 +829,7 @@ function renderReview(){
   <div class="review-stats">
     <div class="stat-tile"><div class="stat-num">${p.allDone} / ${p.allTotal}</div><div class="stat-label">全設問の回答済み数</div></div>
     <div class="stat-tile"><div class="stat-num">${p.reqDone} / ${p.reqTotal}</div><div class="stat-label">必須設問の回答済み数</div></div>
+    ${p.skipTotal>0?`<div class="stat-tile"><div class="stat-num">${p.skipDone} / ${p.skipTotal}</div><div class="stat-label">省略した設問数</div></div>`:''}
   </div>`;
   if(missing.length){
     html += `<div class="missing-box"><h4>未回答の必須項目が ${missing.length} 件あります</h4><ul class="missing-list">` +
@@ -848,7 +877,7 @@ function renderFooter(){
   const isCover = state.step===0, isReview = state.step===STEP_META.length-1;
   footerEl.innerHTML = `
     <div class="footer-progress">
-      <div class="footer-progress-text"><span>${STEP_META[state.step].label}</span><span>${p.allDone}/${p.allTotal} 回答済み（必須 ${p.reqDone}/${p.reqTotal}）</span></div>
+      <div class="footer-progress-text"><span>${STEP_META[state.step].label}</span><span>${progressText(p)}</span></div>
       <div class="footer-bar-track"><div class="footer-bar-fill" style="width:${pct}%"></div></div>
     </div>
     ${isCover?'':'<button class="btn" id="btnPrev">← 戻る</button>'}
@@ -904,6 +933,13 @@ function attachStepEvents(){
   mainScroll.querySelectorAll("[data-doc-note]").forEach(el=>{
     el.addEventListener("input", ()=>{ state.answers["NT_"+el.dataset.docNote] = el.value; scheduleSave(); });
   });
+  mainScroll.querySelectorAll("[data-skip-block]").forEach(el=>{
+    el.addEventListener("change", ()=>{
+      if(!state.skip) state.skip = {};
+      state.skip[el.dataset.skipBlock] = el.checked;
+      saveState(); renderStep(); renderFooter(); renderRail();
+    });
+  });
   const btnStart = document.getElementById("btnStart");
   if(btnStart) btnStart.addEventListener("click", startFromCover);
   const btnReset = document.getElementById("btnReset");
@@ -939,7 +975,7 @@ function renderFooterLite(){
   const pct = p.allTotal ? Math.round((p.allDone/p.allTotal)*100) : 0;
   const txt = footerEl.querySelector(".footer-progress-text span:last-child");
   const fill = footerEl.querySelector(".footer-bar-fill");
-  if(txt) txt.textContent = `${p.allDone}/${p.allTotal} 回答済み（必須 ${p.reqDone}/${p.reqTotal}）`;
+  if(txt) txt.textContent = progressText(p);
   if(fill) fill.style.width = pct+"%";
 }
 
@@ -963,7 +999,7 @@ function jumpToQuestion(qid){
 function doReset(){
   if(!confirm("これまでの回答をすべて消去して、最初からやり直しますか？この操作は取り消せません。")) return;
   try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
-  state = { answers:{}, step:0, invCount:1 };
+  state = { answers:{}, step:0, invCount:1, skip:{} };
   const d = new Date(); state.answers.R_DATE = d.toISOString().slice(0,10);
   hasResumed=false;
   renderAll();
@@ -1006,10 +1042,11 @@ function buildRows(){
         return;
       }
       if(g.heading) rows.push({no:"", section:b.title, label:g.heading, required:"", answer:""});
+      const skipped = isBlockSkipped(b);
       (g.questions||[]).forEach(q=>{
         if(q.type==="note") return;
         if(!isVisible(q)) return;
-        rows.push({no:q.id, section:b.title, label:q.label, required:q.required?"必須":"任意", answer:state.answers[q.id]||""});
+        rows.push({no:q.id, section:b.title, label:q.label, required:q.required?"必須":"任意", answer: skipped ? "（省略）" : (state.answers[q.id]||"")});
       });
     });
   });
